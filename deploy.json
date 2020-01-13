@@ -1,0 +1,40 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+
+        "adminPasswordOrKey": {
+            "metadata": {
+                "description": "Password or SSH public key to login to the Virtual Machine. Note: There are a number of special characters that you should avoid using for F5 product user accounts.  See [K2873](https://support.f5.com/csp/article/K2873) for details. Note: If using key-based authentication, this should be the public key as a string, typically starting with **---- BEGIN SSH2 PUBLIC KEY ----** and ending with **---- END SSH2 PUBLIC KEY ----**."
+            },
+            "type": "securestring"
+        },
+        "dnsLabel": {
+            "metadata": {
+                "description": "Unique DNS Name for the Public IP address used to access the Virtual Machine."
+            },
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+                    {
+                        "type": "Microsoft.Resources/deployments",
+                        "apiVersion": "2018-05-01",
+                        "name": "linkedTemplate",
+                        "properties": {
+                        "mode": "Incremental",
+                        "templateLink": {
+                            "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/azuredeploy.json",
+                            "contentVersion":"1.0.0.0"
+                        },
+                        "parameters": {
+                            "adminPasswordOrKey":{"value": "[parameters('adminPasswordOrKey')]"},
+                            "dnsLabel": {"value": "[parameters('dnsLabel')]"}
+                            }
+                        }
+                    }
+                ],
+    "outputs": {
+    }
+}
