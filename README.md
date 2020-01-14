@@ -4,5 +4,5 @@ Deploys a security stack where PaloAlto firewalls are internet-facing, and F5 BI
 ## Architecture
 
 ## Instructions to deploy
-This is outlined in the accompanying article: https://devcentral.f5.com/s/articles/An-Easy-Demo-for-your-Colleagues-Securing-Container-Traffic-into-EKS
+
 
