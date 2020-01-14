@@ -26,7 +26,7 @@
                         "mode": "Incremental",
                         "templateLink": {
                             "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/azuredeploy.json",
-                            "contentVersion":"1.0.0.0"
+                            "contentVersion":"7.2.0.0"
                         },
                         "parameters": {
                             "adminPasswordOrKey":{"value": "[parameters('adminPasswordOrKey')]"},
