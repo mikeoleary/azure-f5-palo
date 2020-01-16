@@ -25,7 +25,7 @@
                         "properties": {
                         "mode": "Incremental",
                         "templateLink": {
-                            "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/azuredeploy.json",
+                            "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/f5/azuredeploy.json",
                             "contentVersion":"7.2.0.0"
                         },
                         "parameters": {
