@@ -421,6 +421,10 @@
         "intSubnetPrivateAddress": "[concat(parameters('vnetAddressPrefix'), '.3.4')]",
         "intNicName": "[concat(variables('dnsLabel'), '-int')]",
         "intSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('intsubnetName'))]",
+        "untrustSubnetName": "untrust",
+        "untrustSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('untrustsubnetName'))]",
+        "trustSubnetName": "trust",
+        "trustSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('trustsubnetName'))]",
         "mgmtSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.1.5')]",
         "extSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.2.5')]",
         "intSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.3.5')]",
@@ -441,6 +445,8 @@
         "tmmRouteGw": "[concat(parameters('vnetAddressPrefix'), '.2.1')]",
         "extSubnetPrefix": "[concat(parameters('vnetAddressPrefix'), '.2.0/24')]",
         "intSubnetPrefix": "[concat(parameters('vnetAddressPrefix'), '.3.0/24')]",
+        "untrustSubnetPrefix": "[concat(parameters('vnetAddressPrefix'), '.4.0/24')]",
+        "trustSubnetPrefix": "[concat(parameters('vnetAddressPrefix'), '.5.0/24')]",
         "numberOfExternalIps": "[parameters('numberOfExternalIps')]",
         "backEndAddressPoolArray": [
             {
@@ -679,6 +685,18 @@
                         "name": "[variables('intSubnetName')]",
                         "properties": {
                             "addressPrefix": "[variables('intSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('untrustSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('untrustSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('trustSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('trustSubnetPrefix')]"
                         }
                     }
                 ]
@@ -1340,6 +1358,30 @@
         }
     ],
     "outputs": {
+        "virtualNetworkAddressPrefix": {
+            "type": "string",
+            "value": "[reference(variables('virtualNetworkName')).AddressSpace.AddressPrefixes[0]]"
+        },
+        "mgmtSubnetId": {
+            "type": "string",
+            "value": "[variables('mgmtSubnetId')]"
+        },
+        "untrustSubnetId": {
+            "type": "string",
+            "value": "[variables('untrustSubnetId')]"
+        },
+        "trustSubnetId": {
+            "type": "string",
+            "value": "[variables('trustSubnetId')]"
+        },
+        "externalSubnetId": {
+            "type": "string",
+            "value": "[variables('extSubnetId')]"
+        },
+        "internalSubnetId": {
+            "type": "string",
+            "value": "[variables('intSubnetId')]"
+        },
         "GUI-URL": {
             "type": "string",
             "value": "[concat('https://',reference(concat(variables('mgmtPublicIPAddressId'), '0')).dnsSettings.fqdn, ':', variables('bigIpMgmtPort'))]"
