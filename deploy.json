@@ -66,8 +66,14 @@
                                 "dnsNameForPublicIP": {
                                     "value": "[concat(parameters('dnsLabel'),'-palo1')]"
                                 },
+                                "dnsNameForPublicIP2": {
+                                    "value": "[concat(parameters('dnsLabel'),'-palo2')]"
+                                },
                                 "vmName": {
                                     "value": "pavm1"
+                                },
+                                "vmName2": {
+                                    "value": "pavm2"
                                 },
                                 "subnet0id" : {
                                     "value": "[reference('f5linkedTemplate').outputs.mgmtSubnetId.value]"

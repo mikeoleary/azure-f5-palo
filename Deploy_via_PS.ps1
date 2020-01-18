@@ -28,8 +28,8 @@ param(
   #[string] [Parameter(Mandatory=$True)] $allowUsageAnalytics,
   [string] [Parameter(Mandatory=$True)] $resourceGroupName,
   [string] $region = "East US 2",
-  [string] $templateFilePath = "deploy.json",
-  [string] $parametersFilePath = "deploy.parameters.json"
+  [string] $templateFilePath = "deploy.json"
+  #[string] $parametersFilePath = "deploy.parameters.json"
 )
 
 Write-Host "Disclaimer: Scripting to Deploy F5 Solution templates into Cloud Environments are provided as examples. They will be treated as best effort for issues that occur, feedback is encouraged." -foregroundcolor green
@@ -51,10 +51,10 @@ New-AzureRmResourceGroup -Name $resourceGroupName -Location "$region"
 
 $adminPasswordOrKeySecure = ConvertTo-SecureString -String $adminPasswordOrKey -AsPlainText -Force
 
-(ConvertFrom-Json $tagValues).psobject.properties | ForEach -Begin {$tagValues=@{}} -process {$tagValues."$($_.Name)" = $_.Value}
+#(ConvertFrom-Json $tagValues).psobject.properties | ForEach -Begin {$tagValues=@{}} -process {$tagValues."$($_.Name)" = $_.Value}
 
 # Create Arm Deployment
-$deployment = New-AzureRmResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath -TemplateParameterFile $parametersFilePath -Verbose -adminUsername $adminUsername -authenticationType $authenticationType -adminPasswordOrKey $adminPasswordOrKeySecure -dnsLabel $dnsLabel -instanceName $instanceName -numberOfExternalIps $numberOfExternalIps -enableNetworkFailover $enableNetworkFailover -internalLoadBalancerType $internalLoadBalancerType -internalLoadBalancerProbePort $internalLoadBalancerProbePort -instanceType $instanceType -imageName $imageName -bigIpVersion $bigIpVersion -bigIpModules $bigIpModules -vnetAddressPrefix $vnetAddressPrefix -declarationUrl $declarationUrl -ntpServer $ntpServer -timeZone $timeZone -customImage $customImage -restrictedSrcAddress $restrictedSrcAddress -tagValues $tagValues -allowUsageAnalytics $allowUsageAnalytics 
+$deployment = New-AzureRmResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath -Verbose -adminUsername $adminUsername -adminPasswordOrKey $adminPasswordOrKeySecure -dnsLabel $dnsLabel
 
 # Print Output of Deployment to Console
 $deployment
