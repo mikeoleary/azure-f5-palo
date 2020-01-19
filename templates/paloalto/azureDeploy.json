@@ -546,7 +546,7 @@
             "location": "[variables('location')]",
             "name": "[variables('externalLoadBalancerName')]",
             "dependsOn": [
-                "lbpublicIPName"
+                "[concat('Microsoft.Network/publicIpAddresses/', variables('lbpublicIPName'))]"
             ],
             "properties": {
                 "backendAddressPools": [
