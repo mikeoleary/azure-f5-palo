@@ -394,6 +394,9 @@
     {
         "apiVersion": "[variables('apiVersion')]",
         "type": "Microsoft.Network/networkInterfaces",
+        "dependsOn": [
+            "[concat('Microsoft.Network/loadBalancers/', variables('internalLoadBalancerName'))]"
+        ],
         "name": "[concat(variables('nicName'), '2')]",
         "location": "[variables('location')]",
         "tags": {
@@ -421,6 +424,9 @@
     {
         "apiVersion": "[variables('apiVersion')]",
         "type": "Microsoft.Network/networkInterfaces",
+        "dependsOn": [
+            "[concat('Microsoft.Network/loadBalancers/', variables('internalLoadBalancerName'))]"
+        ],
         "name": "[concat(variables('nicName2'), '2')]",
         "location": "[variables('location')]",
         "tags": {
