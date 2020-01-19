@@ -586,7 +586,7 @@
                     "domainNameLabel": "[concat(variables('dnsLabel'), '-0')]"
                 },
                 "idleTimeoutInMinutes": 30,
-                "publicIPAllocationMethod": "[variables('publicIPAddressType')]"
+                "publicIPAllocationMethod": "Static"
             },
             "tags": "[if(empty(variables('tagValues')), json('null'), variables('tagValues'))]",
             "type": "Microsoft.Network/publicIPAddresses"
