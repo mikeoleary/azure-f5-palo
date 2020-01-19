@@ -719,11 +719,6 @@
                     {
                         "name": "[concat(variables('dnsLabel'), '-mgmt-ipconfig')]",
                         "properties": {
-                            "loadBalancerBackendAddressPools": [
-                                {
-                                    "id": "[concat(variables('extLbId'), '/backendAddressPools/', 'loadBalancerMgmtBackEnd')]"
-                                }
-                            ],
                             "PublicIpAddress": {
                                 "Id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat(variables('mgmtPublicIPAddressName'), 0))]"
                             },
@@ -757,11 +752,6 @@
                     {
                         "name": "[concat(variables('dnsLabel'), '-mgmt-ipconfig')]",
                         "properties": {
-                            "loadBalancerBackendAddressPools": [
-                                {
-                                    "id": "[concat(variables('extLbId'), '/backendAddressPools/', 'loadBalancerMgmtBackEnd')]"
-                                }
-                            ],
                             "PublicIpAddress": {
                                 "Id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat(variables('mgmtPublicIPAddressName'), 1))]"
                             },
@@ -1023,9 +1013,6 @@
                 "backendAddressPools": [
                     {
                         "name": "loadBalancerBackEnd"
-                    },
-                    {
-                        "name": "loadBalancerMgmtBackEnd"
                     }
                 ],
                 "copy": [
@@ -1047,7 +1034,7 @@
                         "Name": "external-access",
                         "properties": {
                             "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('externalLoadBalancerName')), '/backendAddressPools/loadBalancerMgmtBackEnd')]"
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('externalLoadBalancerName')), '/backendAddressPools/loadBalancerBackEnd')]"
                             },
                             "backendPort": 443,
                             "frontendIPConfiguration": {
