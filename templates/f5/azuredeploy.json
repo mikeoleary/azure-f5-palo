@@ -63,7 +63,7 @@
                 19,
                 20
             ],
-            "defaultValue": 1,
+            "defaultValue": 0,
             "metadata": {
                 "description": "The number of public/private IP addresses you want to deploy for the application traffic (external) NIC on the BIG-IP VE to be used for virtual servers."
             },
