@@ -152,8 +152,11 @@
         "networkApiVersion": "2017-11-01",
         "imagePublisher": "paloaltonetworks",
 	    "imageOffer" : "vmseries1",
-        "externalLoadBalancerName": "paloalto-ext-alb",
+        "externalLoadBalancerName": "paloalto-ext-lb",
+        "internalLoadBalancerName": "paloalto-int-lb",
         "extLbId": "[resourceId('Microsoft.Network/loadBalancers',variables('externalLoadBalancerName'))]",
+        "intLbId": "[resourceId('Microsoft.Network/loadBalancers',variables('internalLoadBalancerName'))]",
+        "internalLoadBalancerAddress": "10.0.2.50",
         "fwpublicIPName": "[concat(parameters('vmName'), '-fwMgmtPublicIP')]",
         "fwpublicIPName2": "[concat(parameters('vmName2'), '-fwMgmtPublicIP')]",
         "lbpublicIPName": "paloalto-loadbalancer-publicIP",
@@ -401,6 +404,11 @@
             "ipConfigurations": [{
                 "name": "[concat('ipconfig', '2')]",
                 "properties": {
+                    "loadBalancerBackendAddressPools": [
+                        {
+                            "id": "[concat(variables('intLbId'), '/backendAddressPools/', 'loadBalancerBackEnd')]"
+                        }
+                    ],
                     "privateIPAllocationMethod": "Static",
                     "privateIPAddress": "[variables('FWPrivateIPAddressTrust')]",
                     "subnet": {
@@ -423,6 +431,11 @@
             "ipConfigurations": [{
                 "name": "[concat('ipconfig', '2')]",
                 "properties": {
+                    "loadBalancerBackendAddressPools": [
+                        {
+                            "id": "[concat(variables('intLbId'), '/backendAddressPools/', 'loadBalancerBackEnd')]"
+                        }
+                    ],
                     "privateIPAllocationMethod": "Static",
                     "privateIPAddress": "[variables('FWPrivateIPAddressTrust2')]",
                     "subnet": {
@@ -599,6 +612,67 @@
                         "properties": {
                             "intervalInSeconds": 15,
                             "numberOfProbes": 3,
+                            "port": 443,
+                            "protocol": "Tcp"
+                        }
+                    }
+                ]
+            },
+            "sku": {
+                "name": "Standard"
+            },
+            "type": "Microsoft.Network/loadBalancers"
+        },
+        {
+            "apiVersion": "[variables('networkApiVersion')]",
+            "location": "[variables('location')]",
+            "name": "[variables('internalLoadBalancerName')]",
+            "properties": {
+                "backendAddressPools": [
+                    {
+                        "name": "LoadBalancerBackEnd"
+                    }
+                ],
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAddress": "[variables('internalLoadBalancerAddress')]",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[parameters('subnet2Id')]"
+                            }
+                        }
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "name": "allProtocolLbRule",
+                        "properties": {
+                            "backendAddressPool": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/backendAddressPools/loadBalancerBackEnd')]"
+                            },
+                            "backendPort": 0,
+                            "enableFloatingIP": true,
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd')]"
+                            },
+                            "frontendPort": "0",
+                            "idleTimeoutInMinutes": 15,
+                            "loadDistribution": "Default",
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/probes/tcp-probe-443')]"
+                            },
+                            "protocol": "All"
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "tcp-probe-443",
+                        "properties": {
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2,
                             "port": 443,
                             "protocol": "Tcp"
                         }
