@@ -545,6 +545,9 @@
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
             "name": "[variables('externalLoadBalancerName')]",
+            "dependsOn": [
+                "lbpublicIPName"
+            ],
             "properties": {
                 "backendAddressPools": [
                     {
