@@ -149,10 +149,15 @@
     },
     "variables": {
         "apiVersion": "2018-10-01",
+        "networkApiVersion": "2017-11-01",
         "imagePublisher": "paloaltonetworks",
 	    "imageOffer" : "vmseries1",
+        "externalLoadBalancerName": "paloalto-ext-alb",
+        "extLbId": "[resourceId('Microsoft.Network/loadBalancers',variables('externalLoadBalancerName'))]",
         "fwpublicIPName": "[concat(parameters('vmName'), '-fwMgmtPublicIP')]",
         "fwpublicIPName2": "[concat(parameters('vmName2'), '-fwMgmtPublicIP')]",
+        "lbpublicIPName": "paloalto-loadbalancer-publicIP",
+        "lbpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('lbpublicIPName'))]",
         "location": "[resourceGroup().location]",
         "nicName": "[concat(parameters('vmName'), '-eth')]",
         "nicName2": "[concat(parameters('vmName2'), '-eth')]",
@@ -201,6 +206,15 @@
             "dnsSettings": {
                 "domainNameLabel": "[parameters('dnsNameForPublicIP2')]"
             }
+        }
+    },
+    {
+        "apiVersion": "[variables('apiVersion')]",
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "[variables('lbpublicIPName')]",
+        "location": "[variables('location')]",
+        "properties": {
+            "publicIPAllocationMethod": "[variables('publicIPAddressType')]"
         }
     }, 
     {
@@ -308,6 +322,9 @@
     {
         "apiVersion": "[variables('apiVersion')]",
         "type": "Microsoft.Network/networkInterfaces",
+        "dependsOn": [
+            "[concat('Microsoft.Network/loadBalancers/', variables('externalLoadBalancerName'))]"
+        ],
         "name": "[concat(variables('nicName'), '1')]",
         "location": "[variables('location')]",
         "tags": {
@@ -318,6 +335,11 @@
             "ipConfigurations": [{
                 "name": "[concat('ipconfig', '1')]",
                 "properties": {
+                    "loadBalancerBackendAddressPools": [
+                        {
+                            "id": "[concat(variables('extLbId'), '/backendAddressPools/', 'loadBalancerBackEnd')]"
+                        }
+                    ],
                     "privateIPAllocationMethod": "Static",
                     "privateIPAddress": "[variables('FWPrivateIPAddressUntrust')]",
                     "subnet": {
@@ -330,6 +352,9 @@
     {
         "apiVersion": "[variables('apiVersion')]",
         "type": "Microsoft.Network/networkInterfaces",
+        "dependsOn": [
+            "[concat('Microsoft.Network/loadBalancers/', variables('externalLoadBalancerName'))]"
+        ],
         "name": "[concat(variables('nicName2'), '1')]",
         "location": "[variables('location')]",
         "tags": {
@@ -340,6 +365,11 @@
             "ipConfigurations": [{
                 "name": "[concat('ipconfig', '1')]",
                 "properties": {
+                    "loadBalancerBackendAddressPools": [
+                        {
+                            "id": "[concat(variables('extLbId'), '/backendAddressPools/', 'loadBalancerBackEnd')]"
+                        }
+                    ],
                     "privateIPAllocationMethod": "Static",
                     "privateIPAddress": "[variables('FWPrivateIPAddressUntrust2')]",
                     "subnet": {
@@ -510,6 +540,66 @@
 				}]
 			}
 		}
-	}
+	},
+        {
+            "apiVersion": "[variables('networkApiVersion')]",
+            "dependsOn": [
+                "extpipcopy"
+            ],
+            "location": "[variables('location')]",
+            "name": "[variables('externalLoadBalancerName')]",
+            "properties": {
+                "backendAddressPools": [
+                    {
+                        "name": "loadBalancerBackEnd"
+                    }
+                ],
+                "frontendIPConfigurations": [
+                    {
+                        "name": "loadBalancerFrontEnd1",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[variables('lbpublicIPId')]"
+                            }
+                        }
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "Name": "external-access",
+                        "properties": {
+                            "backendAddressPool": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('externalLoadBalancerName')), '/backendAddressPools/loadBalancerBackEnd')]"
+                            },
+                            "backendPort": 443,
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('externalLoadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd1')]"
+                            },
+                            "frontendPort": 443,
+                            "idleTimeoutInMinutes": 15,
+                            "probe": {
+                                "id": "[concat(variables('extLbId'),'/probes/httpsProbe')]"
+                            },
+                            "protocol": "Tcp"
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "httpsProbe",
+                        "properties": {
+                            "intervalInSeconds": 15,
+                            "numberOfProbes": 3,
+                            "port": 443,
+                            "protocol": "Tcp"
+                        }
+                    }
+                ]
+            },
+            "sku": {
+                "name": "Standard"
+            },
+            "type": "Microsoft.Network/loadBalancers"
+        }
   ]
 }

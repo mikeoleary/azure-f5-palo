@@ -47,7 +47,7 @@ try {
     }
 
 # Create Resource Group for ARM Deployment
-New-AzureRmResourceGroup -Name $resourceGroupName -Location "$region"
+New-AzureRmResourceGroup -Name $resourceGroupName -Location "$region" -Force
 
 $adminPasswordOrKeySecure = ConvertTo-SecureString -String $adminPasswordOrKey -AsPlainText -Force
 
