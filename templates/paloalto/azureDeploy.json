@@ -543,9 +543,6 @@
 	},
         {
             "apiVersion": "[variables('networkApiVersion')]",
-            "dependsOn": [
-                "extpipcopy"
-            ],
             "location": "[variables('location')]",
             "name": "[variables('externalLoadBalancerName')]",
             "properties": {
