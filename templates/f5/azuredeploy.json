@@ -1027,10 +1027,10 @@
             "properties": {
                 "backendAddressPools": [
                     {
-                        "name": "LoadBalancerBackEndInternal"
+                        "name": "loadBalancerBackEndInternal"
                     },
                                         {
-                        "name": "LoadBalancerBackEndExternal"
+                        "name": "loadBalancerBackEndExternal"
                     }
                 ],
                 "frontendIPConfigurations": [
