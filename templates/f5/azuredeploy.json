@@ -797,7 +797,7 @@
                     {
                         "name": "[concat(variables('resourceGroupName'), '-ext-ipconfig0')]",
                         "properties": {
-                            "loadBalancerBackendAddressPools": "[take(variables('backEndAddressPoolArray'), 0)]",
+                            "loadBalancerBackendAddressPools": "[variables('backEndAddressPoolArray')[0]]",
                             "primary": false,
                             "privateIPAllocationMethod": "Static",
                             "privateIPAddress": "[concat(variables('extSubnetPrivateAddressPrefix'), 10)]",
@@ -845,7 +845,7 @@
                     {
                         "name": "[concat(variables('resourceGroupName'), '-ext-ipconfig1')]",
                         "properties": {
-                            "loadBalancerBackendAddressPools": "[take(variables('backEndAddressPoolArray'), 0)]",
+                            "loadBalancerBackendAddressPools": "[variables('backEndAddressPoolArray')[0]]",
                             "primary": false,
                             "privateIPAllocationMethod": "Static",
                             "privateIPAddress": "[concat(variables('extSubnetPrivateAddressPrefix'), 11)]",
@@ -893,7 +893,7 @@
                     {
                         "name": "[concat(variables('dnsLabel'), '-int-ipconfig-secondary')]",
                         "properties": {
-                            "loadBalancerBackendAddressPools": "[take(variables('backEndAddressPoolArray'), 1)]",
+                            "loadBalancerBackendAddressPools": "[variables('backEndAddressPoolArray')[1]]",
                             "privateIPAddress": "[variables('intSubnetPrivateAddress2')]",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
@@ -936,7 +936,7 @@
                     {
                         "name": "[concat(variables('dnsLabel'), '-int-ipconfig-secondary')]",
                         "properties": {
-                            "loadBalancerBackendAddressPools": "[take(variables('backEndAddressPoolArray'), 1)]",
+                            "loadBalancerBackendAddressPools": "[variables('backEndAddressPoolArray')[1]]",
                             "privateIPAddress": "[variables('intSubnetPrivateAddress3')]",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
