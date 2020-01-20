@@ -535,8 +535,6 @@
                 "sku": "f5-big-ip-per-app-ve-ltm-25m-hourly"
             }
         },
-        "externalLoadBalancerName": "[concat(variables('dnsLabel'),'-ext-alb')]",
-        "extLbId": "[resourceId('Microsoft.Network/loadBalancers',variables('externalLoadBalancerName'))]",
         "publicIPAddressType": "Static",
         "mgmtPublicIPAddressName": "[concat(variables('dnsLabel'), '-mgmt-pip')]",
         "mgmtPublicIPAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('mgmtPublicIPAddressName'))]",
@@ -820,7 +818,7 @@
         {
             "apiVersion": "[variables('networkApiVersion')]",
             "dependsOn": [
-                "[variables('extLbId')]",
+                "[variables('intLbId')]",
                 "[variables('vnetId')]",
                 "extpipcopy",
                 "[variables('extNsgID')]",
