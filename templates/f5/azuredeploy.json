@@ -799,8 +799,7 @@
                         "properties": {
                             "loadBalancerBackendAddressPools": [
                                 {
-                                    "id": "[variables('backEndAddressPoolArray')[0]]"
-                                }
+                                    "id": "[concat(variables('intLbId'), '/backendAddressPools/', 'loadBalancerBackEndExternal')]"                                }
                                ],
                             "primary": false,
                             "privateIPAllocationMethod": "Static",
@@ -851,7 +850,7 @@
                         "properties": {
                             "loadBalancerBackendAddressPools": [
                                 {
-                                    "id": "[variables('backEndAddressPoolArray')[0]]"
+                                    "id": "[concat(variables('intLbId'), '/backendAddressPools/', 'loadBalancerBackEndExternal')]"
                                 }
                                ],
                             "primary": false,
@@ -903,7 +902,7 @@
                         "properties": {
                             "loadBalancerBackendAddressPools": [
                                 {
-                                    "id": "[variables('backEndAddressPoolArray')[1]]"
+                                    "id": "[concat(variables('intLbId'), '/backendAddressPools/', 'loadBalancerBackEndInternal')]"
                                 }
                                ],
                             "privateIPAddress": "[variables('intSubnetPrivateAddress2')]",
@@ -950,7 +949,7 @@
                         "properties": {
                             "loadBalancerBackendAddressPools": [
                                 {
-                                    "id": "[variables('backEndAddressPoolArray')[1]]"
+                                    "id": "[concat(variables('intLbId'), '/backendAddressPools/', 'loadBalancerBackEndInternal')]"
                                 }
                                ],
                             "privateIPAddress": "[variables('intSubnetPrivateAddress3')]",
