@@ -423,6 +423,8 @@
         "intSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('intsubnetName'))]",
         "untrustSubnetName": "untrust",
         "untrustSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('untrustsubnetName'))]",
+        "untrustNsgName" : "unstrustNsg",
+        "untrustNsgId" : "[resourceId('Microsoft.Network/networkSecurityGroups/',concat(variables('untrustNsgName')))]",
         "trustSubnetName": "trust",
         "trustSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('trustsubnetName'))]",
         "mgmtSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.0.5')]",
@@ -689,7 +691,8 @@
                     {
                         "name": "[variables('untrustSubnetName')]",
                         "properties": {
-                            "addressPrefix": "[variables('untrustSubnetPrefix')]"
+                            "addressPrefix": "[variables('untrustSubnetPrefix')]",
+                            "networkSecurityGroup": "[variables('untrustNsgId')]"
                         }
                     },
                     {
@@ -963,7 +966,59 @@
             },
             "tags": "[if(empty(variables('tagValues')), json('null'), variables('tagValues'))]",
             "type": "Microsoft.Network/networkInterfaces"
-        },
+            },
+            {
+            "apiVersion": "[variables('networkApiVersion')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[variables('untrustNsgName')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "securityRules": [
+                    {
+                    "name": "allow-inbound-allports",
+                        "properties": {
+                            "description": "Rule",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "[parameters('restrictedSrcAddress')]",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound"
+                        }
+                    }, 
+                    {
+                    "name": "allow-vnet",
+                        "properties": {
+                            "description": "Allow intra vnet traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "[concat(parameters('vnetAddressPrefix'), '.0.0/16')]",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 101,
+                            "direction": "Inbound"
+                        }
+                    }, 
+                    {
+                    "name": "Default-Deny",
+                        "properties": {
+                            "description": "Default-Deny if we don't match Allow rule",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 200,
+                            "direction": "Inbound"
+                        }
+                    }
+                ]
+            }
+        }, 
         {
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
