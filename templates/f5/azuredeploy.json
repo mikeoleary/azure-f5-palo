@@ -409,7 +409,8 @@
         "extSubnetName": "external",
         "extSubnetPrivateAddress": "[concat(parameters('vnetAddressPrefix'), '.3.4')]",
         "extSubnetPrivateAddressPrefix": "[concat(parameters('vnetAddressPrefix'), '.3.')]",
-        "extNsgID": "[resourceId('Microsoft.Network/networkSecurityGroups/',concat(variables('dnsLabel'),'-ext-nsg'))]",
+        "extNsgName" : "externalNsg",
+        "extNsgID": "[resourceId('Microsoft.Network/networkSecurityGroups/', variables('extNsgName'))]",
         "extSelfPublicIpAddressNamePrefix": "[concat(variables('dnsLabel'), '-self-pip')]",
         "extSelfPublicIpAddressIdPrefix": "[resourceId('Microsoft.Network/publicIPAddresses', variables('extSelfPublicIpAddressNamePrefix'))]",
         "extpublicIPAddressNamePrefix": "[concat(variables('dnsLabel'), '-ext-pip')]",
@@ -540,7 +541,8 @@
         "publicIPAddressType": "Static",
         "mgmtPublicIPAddressName": "[concat(variables('dnsLabel'), '-mgmt-pip')]",
         "mgmtPublicIPAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('mgmtPublicIPAddressName'))]",
-        "mgmtNsgID": "[resourceId('Microsoft.Network/networkSecurityGroups/',concat(variables('dnsLabel'),'-mgmt-nsg'))]",
+        "mgmtNsgName": "mgmtNsg",
+        "mgmtNsgID": "[resourceId('Microsoft.Network/networkSecurityGroups/',variables('mgmtNsgName'))]",
         "mgmtNicName": "[concat(variables('dnsLabel'), '-mgmt')]",
         "mgmtNicID": "[resourceId('Microsoft.Network/NetworkInterfaces', variables('mgmtNicName'))]",
         "mgmtSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('mgmtSubnetName'))]",
@@ -989,34 +991,6 @@
                             "priority": 100,
                             "direction": "Inbound"
                         }
-                    }, 
-                    {
-                    "name": "allow-vnet",
-                        "properties": {
-                            "description": "Allow intra vnet traffic",
-                            "protocol": "*",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "*",
-                            "sourceAddressPrefix": "[concat(parameters('vnetAddressPrefix'), '.0.0/16')]",
-                            "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 101,
-                            "direction": "Inbound"
-                        }
-                    }, 
-                    {
-                    "name": "Default-Deny",
-                        "properties": {
-                            "description": "Default-Deny if we don't match Allow rule",
-                            "protocol": "*",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "*",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Deny",
-                            "priority": 200,
-                            "direction": "Inbound"
-                        }
                     }
                 ]
             }
@@ -1024,7 +998,7 @@
         {
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
-            "name": "[concat(variables('dnsLabel'), '-mgmt-nsg')]",
+            "name": "[variables('mgmtNsgName')]",
             "properties": {
                 "securityRules": [
                     {
@@ -1063,7 +1037,7 @@
         {
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
-            "name": "[concat(variables('dnsLabel'), '-ext-nsg')]",
+            "name": "[variables('extNsgName')]",
             "properties": {
                 "securityRules": []
             },
