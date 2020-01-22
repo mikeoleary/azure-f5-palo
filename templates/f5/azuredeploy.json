@@ -675,13 +675,19 @@
                     {
                         "name": "[variables('mgmtSubnetName')]",
                         "properties": {
-                            "addressPrefix": "[variables('mgmtSubnetPrefix')]"
+                            "addressPrefix": "[variables('mgmtSubnetPrefix')]",
+                            "networkSecurityGroup": {
+                                "id": "[variables('mgmtNsgId')]"
+                            }
                         }
                     },
                     {
                         "name": "[variables('extSubnetName')]",
                         "properties": {
-                            "addressPrefix": "[variables('extSubnetPrefix')]"
+                            "addressPrefix": "[variables('extSubnetPrefix')]",
+                            "networkSecurityGroup": {
+                                "id": "[variables('extNsgId')]"
+                            }
                         }
                     },
                     {
