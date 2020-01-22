@@ -668,7 +668,7 @@
                 "[variables('extNsgId')]",
                 "[variables('untrustNsgId')]",
                 "[variables('mgmtNsgId')]"
-            ]
+            ],
             "name": "[variables('virtualNetworkName')]",
             "properties": {
                 "addressSpace": {
