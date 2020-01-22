@@ -165,12 +165,16 @@
         "nicName": "[concat(parameters('vmName'), '-eth')]",
         "nicName2": "[concat(parameters('vmName2'), '-eth')]",
         "publicIPAddressType": "Static",
+        "FWNextHopExternal": "10.0.1.1",
+        "FWNextHopInternal": "10.0.2.1",
         "FWPrivateIPAddressUntrust": "10.0.1.10",
         "FWPrivateIPAddressTrust": "10.0.2.10",
         "FWPrivateIPAddressMgmt": "10.0.0.6",
         "FWPrivateIPAddressUntrust2": "10.0.1.11",
         "FWPrivateIPAddressTrust2": "10.0.2.11",
-        "FWPrivateIPAddressMgmt2": "10.0.0.7"
+        "FWPrivateIPAddressMgmt2": "10.0.0.7",
+        "FW1CustomData": "[concat('#cloud-config\nruncmd:\n  - configure\n  - set network interface ethernet ethernet1/1 layer3 ip ',variables('FWPrivateIPAddressUntrust'),'/24\n  - set network interface ethernet ethernet1/2 layer3 ip ',variables('FWPrivateIPAddressTrust'),'/24\n  - set network virtual-router default interface ethernet1/1\n  - set network virtual-router default interface ethernet1/2\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 0.0.0.0/0 interface ethernet1/1 nexthop ip-address ',variables('FWNextHopExternal'),'\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 10.0.0.0/8 interface ethernet1/2 nexthop ip-address ',variables('FWNextHopInternal'),'\n  - set zone untrust network layer3 ethernet1/1\n  - set zone trust network layer3 ethernet1/2\n  - validate full\n  - commit')]",
+        "FW2CustomData": "[concat('#cloud-config\nruncmd:\n  - configure\n  - set network interface ethernet ethernet1/1 layer3 ip ',variables('FWPrivateIPAddressUntrust2'),'/24\n  - set network interface ethernet ethernet1/2 layer3 ip ',variables('FWPrivateIPAddressTrust2'),'/24\n  - set network virtual-router default interface ethernet1/1\n  - set network virtual-router default interface ethernet1/2\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 0.0.0.0/0 interface ethernet1/1 nexthop ip-address ',variables('FWNextHopExternal'),'\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 10.0.0.0/8 interface ethernet1/2 nexthop ip-address ',variables('FWNextHopInternal'),'\n  - set zone untrust network layer3 ethernet1/1\n  - set zone trust network layer3 ethernet1/2\n  - validate full\n  - commit')]"
     },
     "resources": [
     {
@@ -427,7 +431,8 @@
 			"osProfile": {
 				"computerName": "[parameters('vmName')]",
 				"adminUsername": "[parameters('adminUsername')]",
-				"adminPassword": "[parameters('adminPassword')]"
+				"adminPassword": "[parameters('adminPassword')]",
+                "customData": "[base64(variables('FW1CustomData'))]"
 			},
 			"storageProfile": {
 				"imageReference": {
@@ -486,8 +491,8 @@
 			"osProfile": {
 				"computerName": "[parameters('vmName2')]",
 				"adminUsername": "[parameters('adminUsername')]",
-				"adminPassword": "[parameters('adminPassword')]"
-			},
+				"adminPassword": "[parameters('adminPassword')]",
+                "customData": "[base64(variables('FW2CustomData'))]"			},
 			"storageProfile": {
 				"imageReference": {
 					"publisher": "[variables('imagePublisher')]",
