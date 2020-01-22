@@ -173,6 +173,8 @@
         "FWPrivateIPAddressUntrust2": "10.0.1.11",
         "FWPrivateIPAddressTrust2": "10.0.2.11",
         "FWPrivateIPAddressMgmt2": "10.0.0.7",
+        "FWpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('fwpublicIPName'))]",
+        "FWpublicIPId2": "[resourceId('Microsoft.Network/publicIPAddresses',variables('fwpublicIPName2'))]",
         "FW1CustomData": "[concat('#cloud-config\nruncmd:\n  - configure\n  - set network interface ethernet ethernet1/1 layer3 ip ',variables('FWPrivateIPAddressUntrust'),'/24\n  - set network interface ethernet ethernet1/2 layer3 ip ',variables('FWPrivateIPAddressTrust'),'/24\n  - set network virtual-router default interface ethernet1/1\n  - set network virtual-router default interface ethernet1/2\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 0.0.0.0/0 interface ethernet1/1 nexthop ip-address ',variables('FWNextHopExternal'),'\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 10.0.0.0/8 interface ethernet1/2 nexthop ip-address ',variables('FWNextHopInternal'),'\n  - set zone untrust network layer3 ethernet1/1\n  - set zone trust network layer3 ethernet1/2\n  - validate full\n  - commit')]",
         "FW2CustomData": "[concat('#cloud-config\nruncmd:\n  - configure\n  - set network interface ethernet ethernet1/1 layer3 ip ',variables('FWPrivateIPAddressUntrust2'),'/24\n  - set network interface ethernet ethernet1/2 layer3 ip ',variables('FWPrivateIPAddressTrust2'),'/24\n  - set network virtual-router default interface ethernet1/1\n  - set network virtual-router default interface ethernet1/2\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 0.0.0.0/0 interface ethernet1/1 nexthop ip-address ',variables('FWNextHopExternal'),'\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 10.0.0.0/8 interface ethernet1/2 nexthop ip-address ',variables('FWNextHopInternal'),'\n  - set zone untrust network layer3 ethernet1/1\n  - set zone trust network layer3 ethernet1/2\n  - validate full\n  - commit')]"
     },
@@ -646,5 +648,19 @@
             },
             "type": "Microsoft.Network/loadBalancers"
         }
-  ]
+  ],
+    "outputs": {
+        "fw1mgmtIP": {
+            "type": "string",
+            "value": "[concat('https://',reference(variables('FWpublicIPId')).dnsSettings.fqdn)]"
+        },
+        "fw2mgmtIP": {
+            "type": "string",
+            "value": "[concat('https://',reference(variables('FWpublicIPId2')).dnsSettings.fqdn)]"
+        },
+        "appUrl": {
+            "type": "string",
+            "value": "[concat('https://',reference(variables('lbpublicIPId')).dnsSettings.fqdn)]"
+        }
+    }
 }

@@ -95,5 +95,25 @@
                     }
                 ],
     "outputs": {
+        "appUrl": {
+            "type": "string",
+            "value": "[reference('palinkedTemplate').outputs.appUrl.value]"
+            },      
+        "fw1mgmtIP": {
+            "type": "string",
+            "value": "[reference('palinkedTemplate').outputs.fw1mgmtIP.value]"
+            },
+        "fw2mgmtIP": {
+            "type": "string",
+            "value": "[reference('palinkedTemplate').outputs.fw2mgmtIP.value]"
+            },
+        "bigip1mgmtIP": {
+            "type": "string",
+            "value": "[reference('f5linkedTemplate').outputs.bigip1mgmtIP.value]"
+        },
+        "bigip2mgmtIP": {
+            "type": "string",
+            "value": "[reference('f5linkedTemplate').outputs.bigip2mgmtIP.value]"
+        }
     }
 }

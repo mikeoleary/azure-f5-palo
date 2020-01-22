@@ -1423,13 +1423,17 @@
             "type": "string",
             "value": "[variables('intSubnetId')]"
         },
-        "GUI-URL": {
-            "type": "string",
-            "value": "[concat('https://',reference(concat(variables('mgmtPublicIPAddressId'), '0')).dnsSettings.fqdn, ':', variables('bigIpMgmtPort'))]"
-        },
         "SSH-URL": {
             "type": "string",
             "value": "[concat(reference(concat(variables('mgmtPublicIPAddressId'), '0')).dnsSettings.fqdn,' ',22)]"
+        },
+        "bigip1mgmtIP": {
+            "type": "string",
+            "value": "[concat('https://',reference(concat(variables('mgmtPublicIPAddressId'), '0')).dnsSettings.fqdn, ':', variables('bigIpMgmtPort'))]"
+        },
+        "bigip2mgmtIP": {
+            "type": "string",
+            "value": "[concat('https://',reference(concat(variables('mgmtPublicIPAddressId'), '1')).dnsSettings.fqdn, ':', variables('bigIpMgmtPort'))]"
         }
     }
 }
