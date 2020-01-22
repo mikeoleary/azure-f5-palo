@@ -660,7 +660,7 @@
         },
         "appUrl": {
             "type": "string",
-            "value": "[concat('https://',reference(variables('lbpublicIPId')).dnsSettings.fqdn)]"
+            "value": "[concat('https://',reference(variables('lbpublicIPId')).IpAddress)]"
         }
     }
 }
