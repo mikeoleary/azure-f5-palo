@@ -664,6 +664,11 @@
         {
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
+            "dependsOn": [
+                "[variables('extNsgId')]",
+                "[variables('untrustNsgId')]",
+                "[variables('mgmtNsgId')]"
+            ]
             "name": "[variables('virtualNetworkName')]",
             "properties": {
                 "addressSpace": {
