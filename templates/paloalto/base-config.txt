@@ -1,0 +1,28 @@
+configure
+set network interface ethernet ethernet1/1 layer3 ip 10.0.1.10/24
+set network interface ethernet ethernet1/2 layer3 ip 10.0.2.10/24
+set network virtual-router default interface ethernet1/1
+set network virtual-router default interface ethernet1/2
+set network virtual-router default routing-table ip static-route defaultRoute destination 0.0.0.0/0 interface ethernet1/1 nexthop ip-address 10.0.1.1
+set zone untrust network layer3 ethernet1/1
+set zone trust network layer3 ethernet1/2
+validate full
+commit
+
+configure
+set network interface ethernet ethernet1/1 layer3 ip 10.0.1.11/24
+set network interface ethernet ethernet1/2 layer3 ip 10.0.2.11/24
+set network virtual-router default interface ethernet1/1
+set network virtual-router default interface ethernet1/2
+set network virtual-router default routing-table ip static-route defaultRoute destination 0.0.0.0/0 interface ethernet1/1 nexthop ip-address 10.0.1.1
+set zone untrust network layer3 ethernet1/1
+set zone trust network layer3 ethernet1/2
+validate full
+commit
+
+#RULES
+set rulebase security rules allow-outbound from trust source 0.0.0.0/0 to untrust destination 0.0.0.0/0 application any service any action allow
+set rulebase security rules allow-inbound-app1-https from untrust source 0.0.0.0/0 to trust destination 10.0.3.50/32 application any service service-https action allow
+set rulebase security rules allow-inbound-app1-http from untrust source 0.0.0.0/0 to trust destination 10.0.3.50/32 application any service service-http action allow
+validate full
+commit

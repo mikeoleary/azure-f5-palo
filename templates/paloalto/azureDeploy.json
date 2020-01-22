@@ -165,7 +165,6 @@
         "nicName": "[concat(parameters('vmName'), '-eth')]",
         "nicName2": "[concat(parameters('vmName2'), '-eth')]",
         "publicIPAddressType": "Static",
-        "nsgname-mgmt": "[concat(parameters('vmName'), '-DefaultNSG')]",
         "FWPrivateIPAddressUntrust": "10.0.1.10",
         "FWPrivateIPAddressTrust": "10.0.2.10",
         "FWPrivateIPAddressMgmt": "10.0.0.6",
@@ -227,54 +226,6 @@
         "location": "[variables('location')]",
         "properties": {
             "publicIPAllocationMethod": "[variables('publicIPAddressType')]"
-        }
-    }, 
-    {
-        "apiVersion": "[variables('apiVersion')]",
-        "type": "Microsoft.Network/networkSecurityGroups",
-        "name": "[concat(parameters('vmName'), '-DefaultNSG')]",
-        "location": "[variables('location')]",
-        "properties": {
-            "securityRules": [{
-                "name": "Allow-Outside-From-IP",
-                "properties": {
-                    "description": "Rule",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "[parameters('srcIPInboundNSG')]",
-                    "destinationAddressPrefix": "*",
-                    "access": "Allow",
-                    "priority": 100,
-                    "direction": "Inbound"
-                }
-            }, {
-                "name": "Allow-Intra",
-                "properties": {
-                    "description": "Allow intra network traffic",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "[concat(parameters('virtualNetworkAddressPrefix'))]",
-                    "destinationAddressPrefix": "*",
-                    "access": "Allow",
-                    "priority": 101,
-                    "direction": "Inbound"
-                }
-            }, {
-                "name": "Default-Deny",
-                "properties": {
-                    "description": "Default-Deny if we don't match Allow rule",
-                    "protocol": "*",
-                    "sourcePortRange": "*",
-                    "destinationPortRange": "*",
-                    "sourceAddressPrefix": "*",
-                    "destinationAddressPrefix": "*",
-                    "access": "Deny",
-                    "priority": 200,
-                    "direction": "Inbound"
-                }
-            }]
         }
     }, 
     {
@@ -533,7 +484,7 @@
 				"vmSize": "[parameters('vmSize')]"
 			},
 			"osProfile": {
-				"computerName": "[parameters('vmName')]",
+				"computerName": "[parameters('vmName2')]",
 				"adminUsername": "[parameters('adminUsername')]",
 				"adminPassword": "[parameters('adminPassword')]"
 			},
