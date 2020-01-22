@@ -692,7 +692,9 @@
                         "name": "[variables('untrustSubnetName')]",
                         "properties": {
                             "addressPrefix": "[variables('untrustSubnetPrefix')]",
-                            "networkSecurityGroup": "[variables('untrustNsgId')]"
+                            "networkSecurityGroup": {
+                                "id": "[variables('untrustNsgId')]"
+                            }
                         }
                     },
                     {
