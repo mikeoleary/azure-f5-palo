@@ -422,12 +422,16 @@
         "intSubnetPrivateAddress": "[concat(parameters('vnetAddressPrefix'), '.4.4')]",
         "intNicName": "[concat(variables('dnsLabel'), '-int')]",
         "intSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('intsubnetName'))]",
+        "intNsgName" : "internalNsg",
+        "intNsgId": "[resourceId('Microsoft.Network/networkSecurityGroups/', variables('intNsgName'))]",
         "untrustSubnetName": "untrust",
         "untrustSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('untrustsubnetName'))]",
         "untrustNsgName" : "unstrustNsg",
         "untrustNsgId" : "[resourceId('Microsoft.Network/networkSecurityGroups/',concat(variables('untrustNsgName')))]",
         "trustSubnetName": "trust",
         "trustSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('trustsubnetName'))]",
+        "trustNsgName" : "trustNsg",
+        "trustNsgId" : "[resourceId('Microsoft.Network/networkSecurityGroups/',concat(variables('trustNsgName')))]",
         "mgmtSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.0.5')]",
         "extSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.3.5')]",
         "intSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.4.5')]",
@@ -666,7 +670,9 @@
             "location": "[variables('location')]",
             "dependsOn": [
                 "[variables('extNsgId')]",
+                "[variables('intNsgId')]",
                 "[variables('untrustNsgId')]",
+                "[variables('trustNsgId')]",
                 "[variables('mgmtNsgId')]"
             ],
             "name": "[variables('virtualNetworkName')]",
@@ -1004,6 +1010,24 @@
                         }
                     }
                 ]
+            }
+        }, 
+        {
+            "apiVersion": "[variables('networkApiVersion')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[variables('trustNsgName')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "securityRules": []
+            }
+        }, 
+        {
+            "apiVersion": "[variables('networkApiVersion')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[variables('intNsgName')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "securityRules": []
             }
         }, 
         {

@@ -4,6 +4,7 @@ set network interface ethernet ethernet1/2 layer3 ip 10.0.2.10/24
 set network virtual-router default interface ethernet1/1
 set network virtual-router default interface ethernet1/2
 set network virtual-router default routing-table ip static-route defaultRoute destination 0.0.0.0/0 interface ethernet1/1 nexthop ip-address 10.0.1.1
+set network virtual-router default routing-table ip static-route internalRoute destination 10.0.0.0/8 interface ethernet1/2 nexthop ip-address 10.0.2.1
 set zone untrust network layer3 ethernet1/1
 set zone trust network layer3 ethernet1/2
 validate full
@@ -15,6 +16,7 @@ set network interface ethernet ethernet1/2 layer3 ip 10.0.2.11/24
 set network virtual-router default interface ethernet1/1
 set network virtual-router default interface ethernet1/2
 set network virtual-router default routing-table ip static-route defaultRoute destination 0.0.0.0/0 interface ethernet1/1 nexthop ip-address 10.0.1.1
+set network virtual-router default routing-table ip static-route internalRoute destination 10.0.0.0/8 interface ethernet1/2 nexthop ip-address 10.0.2.1
 set zone untrust network layer3 ethernet1/1
 set zone trust network layer3 ethernet1/2
 validate full
