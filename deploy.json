@@ -121,6 +121,32 @@
                                 }
                             }
                         }
+                    },
+                    {
+                        "type": "Microsoft.Resources/deployments",
+                        "apiVersion": "2018-05-01",
+                        "name": "applinkedTemplate",
+                        "properties": {
+                            "mode": "Incremental",
+                            "templateLink": {
+                                "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/appserver/azuredeploy.json",
+                                "contentVersion":"1.0.0.0"
+                            },
+                            "parameters": {
+                                "adminUsername": {
+                                    "value": "[parameters('adminUsername')]"
+                                },
+                                "adminPasswordOrKey": {
+                                    "value": "[parameters('adminPasswordOrKey')]"
+                                },
+                                "subnetId": {
+                                    "value": "[reference('f5linkedTemplate').outputs.appSubnet1Id.value]"
+                                },
+                                "privateIPAddress": {
+                                    "value": "[reference('f5linkedTemplate').outputs.appServer1IP.value]"
+                                }
+                            }
+                        }
                     }
                 ],
     "outputs": {

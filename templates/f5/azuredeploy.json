@@ -434,6 +434,7 @@
         "trustNsgId" : "[resourceId('Microsoft.Network/networkSecurityGroups/',concat(variables('trustNsgName')))]",
         "appSubnet1Name": "appSubnet1",
         "appSubnet1Prefix": "[concat(parameters('vnetAddressPrefix'), '.5.0/24')]",
+        "appServer1IP": "[concat(parameters('vnetAddressPrefix'), '.5.100')]",
         "appSubnet1Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet1Name'))]",
         "appSubnet2Name": "appSubnet2",
         "appSubnet2Prefix": "[concat(parameters('vnetAddressPrefix'), '.6.0/24')]",
@@ -1448,6 +1449,10 @@
         "appSubnet2Id": {
             "type": "string",
             "value": "[variables('appSubnet2Id')]"
+        },
+        "appServer1IP":{
+            "type": "string",
+            "value": "[variables('appServer1IP')]"
         },
         "SSH-URL": {
             "type": "string",
