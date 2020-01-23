@@ -62,7 +62,10 @@
                                     },
                                 "dnsLabel": {
                                     "value": "[parameters('dnsLabel')]"
-                                }
+                                },
+                                "declarationUrl": {
+                                    "value": "https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/f5/baseline.json"
+                                }                                
                             }
                         }
                     },

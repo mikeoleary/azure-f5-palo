@@ -162,7 +162,7 @@
         },
         "fileShareName": {
             "type": "string",
-            "defaultValue": "pabootstrap",
+            "defaultValue": "bootstrapfiles",
             "metadata": {
                 "description": "Name of files service in Azure Storage Account"
             }
