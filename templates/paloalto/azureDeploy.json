@@ -145,7 +145,28 @@
             "metadata": {
                 "description": "Subnet Id for the Trust subnet"
             }
-        }                  
+        },
+        "StorageAccountKey": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Storage Account Key for accessing PA VM bootstrap config files"
+            }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Storage Account Name that hosts PA VM bootstrap config files"
+            }
+        },
+        "fileShareName": {
+            "type": "string",
+            "defaultValue": "pabootstrap",
+            "metadata": {
+                "description": "Name of files service in Azure Storage Account"
+            }
+        }                      
     },
     "variables": {
         "apiVersion": "2018-10-01",
@@ -173,9 +194,8 @@
         "FWPrivateIPAddressMgmt2": "10.0.0.7",
         "FWpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('fwpublicIPName'))]",
         "FWpublicIPId2": "[resourceId('Microsoft.Network/publicIPAddresses',variables('fwpublicIPName2'))]",
-        "CustomData1": "storage-account=molearyfiles,access-key=u/zuZiOfY9l1aIcixrQiSULtyHUbYefVh0wGfkRhFz/7OgxNFiawrtJP+jtdSzGfnB2RGBQd1NwkD7A489HeEw==,file-share=pabootstrap,share-directory=pavm1",
-        "CustomData2": "storage-account=molearyfiles,access-key=u/zuZiOfY9l1aIcixrQiSULtyHUbYefVh0wGfkRhFz/7OgxNFiawrtJP+jtdSzGfnB2RGBQd1NwkD7A489HeEw==,file-share=pabootstrap,share-directory=pavm2"
-    },
+        "CustomData": "[concat('storage-account=', parameters('storageAccountName'), ',access-key=', parameters('StorageAccountKey'), ',file-share=', parameters('fileShareName'))]"
+        },
     "resources": [
     {
         "apiVersion": "2018-10-01",
@@ -432,7 +452,7 @@
 				"computerName": "[parameters('vmName')]",
 				"adminUsername": "[parameters('adminUsername')]",
 				"adminPassword": "[parameters('adminPassword')]",
-                "customData": "[base64(variables('CustomData1'))]"
+                "customData": "[base64(concat(variables('CustomData'),',share-directory=pavm1'))]"
 			},
 			"storageProfile": {
 				"imageReference": {
@@ -492,7 +512,7 @@
 				"computerName": "[parameters('vmName2')]",
 				"adminUsername": "[parameters('adminUsername')]",
 				"adminPassword": "[parameters('adminPassword')]",
-                "customData": "[base64(variables('CustomData2'))]"
+                "customData": "[base64(concat(variables('CustomData'),',share-directory=pavm2'))]"
                 },
 			"storageProfile": {
 				"imageReference": {

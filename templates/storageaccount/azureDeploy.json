@@ -1,0 +1,96 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "StorageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the storage account to create"
+            }
+        },
+        "ContainerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the container in the storage account to store files"
+            },
+            "defaultValue": "bootstrapfiles"
+        },
+        "sourceStorageURL": {
+            "type": "string",
+            "metadata": {
+                "description": "URL of Azure Storage Account and blob container with orginal files to copy"
+            },
+            "defaultValue": "https://molearyfiles.blob.core.windows.net/paloaltobootstrapfiles"
+        }
+    },
+    "variables": {
+        "storageAccountName": "[concat(parameters('StorageAccountName'),take(uniqueString(resourceGroup().id),5))]",
+        "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]",
+        "sourceStorageURL": "[parameters('sourceStorageURL')]",
+        "containerImageName": "samcogan/azcopy"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-02-01",
+            "name": "[variables('StorageAccountName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "[variables('StorageAccountName')]"
+            },
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "StorageV2",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2017-10-01-preview",
+            "name": "[concat(variables('StorageAccountName'),'-aci')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]"
+            ],
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[concat(variables('StorageAccountName'),'-aci')]",
+                        "properties": {
+                            "command": [
+                                "azcopy",
+                                "--source",
+                                "[variables('sourceStorageURL')]",
+                                "--destination",
+                                "[concat('https://',variables('storageAccountName'),'.file.core.windows.net/',parameters('ContainerName'))]",
+                                "--dest-key",
+                                "[listKeys(variables('storageAccountid') ,'2015-05-01-preview').key1]",
+                                "--recursive",
+                                "--quiet"
+                            ],
+                            "image": "[variables('containerImageName')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": 1,
+                                    "memoryInGB": 1
+                                }
+                            }
+                        }
+                    }
+                ],
+                "osType": "Linux",
+                "restartPolicy": "Never"
+            }
+        }
+    ],
+    "outputs": {
+        "StorageAccountKey": {
+            "type": "string",
+            "value": "[listKeys(variables('storageAccountid') ,'2015-05-01-preview').key1]"
+        },
+        "storageAccountName": {
+            "type": "string",
+            "value": "[variables('storageAccountName')]"
+        }
+    }
+}
