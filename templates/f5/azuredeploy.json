@@ -432,6 +432,12 @@
         "trustSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('trustsubnetName'))]",
         "trustNsgName" : "trustNsg",
         "trustNsgId" : "[resourceId('Microsoft.Network/networkSecurityGroups/',concat(variables('trustNsgName')))]",
+        "appSubnet1Name": "appSubnet1",
+        "appSubnet1Prefix": "[concat(parameters('vnetAddressPrefix'), '.5.0/24')]",
+        "appSubnet1Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet1Name'))]",
+        "appSubnet2Name": "appSubnet2",
+        "appSubnet2Prefix": "[concat(parameters('vnetAddressPrefix'), '.6.0/24')]",
+        "appSubnet2Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet2Name'))]",
         "mgmtSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.0.5')]",
         "extSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.3.5')]",
         "intSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.4.5')]",
@@ -720,6 +726,18 @@
                         "name": "[variables('trustSubnetName')]",
                         "properties": {
                             "addressPrefix": "[variables('trustSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('appSubnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('appSubnet1Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('appSubnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('appSubnet2Prefix')]"
                         }
                     }
                 ]
@@ -1422,6 +1440,14 @@
         "internalSubnetId": {
             "type": "string",
             "value": "[variables('intSubnetId')]"
+        },
+        "appSubnet1Id": {
+            "type": "string",
+            "value": "[variables('appSubnet1Id')]"
+        },
+        "appSubnet2Id": {
+            "type": "string",
+            "value": "[variables('appSubnet2Id')]"
         },
         "SSH-URL": {
             "type": "string",
