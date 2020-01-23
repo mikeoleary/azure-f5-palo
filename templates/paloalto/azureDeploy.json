@@ -173,8 +173,8 @@
         "FWPrivateIPAddressMgmt2": "10.0.0.7",
         "FWpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('fwpublicIPName'))]",
         "FWpublicIPId2": "[resourceId('Microsoft.Network/publicIPAddresses',variables('fwpublicIPName2'))]",
-        "CustomData1": "storage-account=molearyfiles,access-key=u/zuZiOfY9l1aIcixrQiSULtyHUbYefVh0wGfkRhFz/7OgxNFiawrtJP+jtdSzGfnB2RGBQd1NwkD7A489HeEw==,file-share=paloalto,share-directory=pavm1",
-        "CustomData2": "storage-account=molearyfiles,access-key=u/zuZiOfY9l1aIcixrQiSULtyHUbYefVh0wGfkRhFz/7OgxNFiawrtJP+jtdSzGfnB2RGBQd1NwkD7A489HeEw==,file-share=paloalto,share-directory=pavm2"
+        "CustomData1": "storage-account=molearyfiles,access-key=u/zuZiOfY9l1aIcixrQiSULtyHUbYefVh0wGfkRhFz/7OgxNFiawrtJP+jtdSzGfnB2RGBQd1NwkD7A489HeEw==,file-share=pabootstrap,share-directory=pavm1",
+        "CustomData2": "storage-account=molearyfiles,access-key=u/zuZiOfY9l1aIcixrQiSULtyHUbYefVh0wGfkRhFz/7OgxNFiawrtJP+jtdSzGfnB2RGBQd1NwkD7A489HeEw==,file-share=pabootstrap,share-directory=pavm2"
     },
     "resources": [
     {
