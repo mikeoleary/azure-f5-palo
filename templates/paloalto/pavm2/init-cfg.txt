@@ -1,0 +1,11 @@
+type=static
+ip-address=10.0.0.7
+default-gateway=10.0.0.1
+netmask=255.255.255.0
+hostname=pavm1
+dns-primary=8.8.8.8
+dns-secondary=4.2.2.2
+dhcp-send-hostname=no
+dhcp-send-client-id=no
+dhcp-accept-server-hostname=no
+dhcp-accept-server-domain=no

@@ -165,8 +165,6 @@
         "nicName": "[concat(parameters('vmName'), '-eth')]",
         "nicName2": "[concat(parameters('vmName2'), '-eth')]",
         "publicIPAddressType": "Static",
-        "FWNextHopExternal": "10.0.1.1",
-        "FWNextHopInternal": "10.0.2.1",
         "FWPrivateIPAddressUntrust": "10.0.1.10",
         "FWPrivateIPAddressTrust": "10.0.2.10",
         "FWPrivateIPAddressMgmt": "10.0.0.6",
@@ -175,8 +173,8 @@
         "FWPrivateIPAddressMgmt2": "10.0.0.7",
         "FWpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('fwpublicIPName'))]",
         "FWpublicIPId2": "[resourceId('Microsoft.Network/publicIPAddresses',variables('fwpublicIPName2'))]",
-        "FW1CustomData": "[concat('#cloud-config\nruncmd:\n  - configure\n  - set network interface ethernet ethernet1/1 layer3 ip ',variables('FWPrivateIPAddressUntrust'),'/24\n  - set network interface ethernet ethernet1/2 layer3 ip ',variables('FWPrivateIPAddressTrust'),'/24\n  - set network virtual-router default interface ethernet1/1\n  - set network virtual-router default interface ethernet1/2\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 0.0.0.0/0 interface ethernet1/1 nexthop ip-address ',variables('FWNextHopExternal'),'\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 10.0.0.0/8 interface ethernet1/2 nexthop ip-address ',variables('FWNextHopInternal'),'\n  - set zone untrust network layer3 ethernet1/1\n  - set zone trust network layer3 ethernet1/2\n  - validate full\n  - commit')]",
-        "FW2CustomData": "[concat('#cloud-config\nruncmd:\n  - configure\n  - set network interface ethernet ethernet1/1 layer3 ip ',variables('FWPrivateIPAddressUntrust2'),'/24\n  - set network interface ethernet ethernet1/2 layer3 ip ',variables('FWPrivateIPAddressTrust2'),'/24\n  - set network virtual-router default interface ethernet1/1\n  - set network virtual-router default interface ethernet1/2\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 0.0.0.0/0 interface ethernet1/1 nexthop ip-address ',variables('FWNextHopExternal'),'\n  - set network virtual-router default routing-table ip static-route defaultRoute destination 10.0.0.0/8 interface ethernet1/2 nexthop ip-address ',variables('FWNextHopInternal'),'\n  - set zone untrust network layer3 ethernet1/1\n  - set zone trust network layer3 ethernet1/2\n  - validate full\n  - commit')]"
+        "CustomData1": "storage-account=molearyfiles,access-key=u/zuZiOfY9l1aIcixrQiSULtyHUbYefVh0wGfkRhFz/7OgxNFiawrtJP+jtdSzGfnB2RGBQd1NwkD7A489HeEw==,file-share=paloalto,share-directory=pavm1",
+        "CustomData2": "storage-account=molearyfiles,access-key=u/zuZiOfY9l1aIcixrQiSULtyHUbYefVh0wGfkRhFz/7OgxNFiawrtJP+jtdSzGfnB2RGBQd1NwkD7A489HeEw==,file-share=paloalto,share-directory=pavm2"
     },
     "resources": [
     {
@@ -434,7 +432,7 @@
 				"computerName": "[parameters('vmName')]",
 				"adminUsername": "[parameters('adminUsername')]",
 				"adminPassword": "[parameters('adminPassword')]",
-                "customData": "[base64(variables('FW1CustomData'))]"
+                "customData": "[base64(variables('CustomData1'))]"
 			},
 			"storageProfile": {
 				"imageReference": {
@@ -494,7 +492,8 @@
 				"computerName": "[parameters('vmName2')]",
 				"adminUsername": "[parameters('adminUsername')]",
 				"adminPassword": "[parameters('adminPassword')]",
-                "customData": "[base64(variables('FW2CustomData'))]"			},
+                "customData": "[base64(variables('CustomData2'))]"
+                },
 			"storageProfile": {
 				"imageReference": {
 					"publisher": "[variables('imagePublisher')]",
