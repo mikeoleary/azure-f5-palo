@@ -28,7 +28,63 @@
 					"internal"
 				]
 				}
-			}
+			},
+			"app1_https": {
+                "class": "Application",
+                "template": "generic",
+                "app1_https": {
+                    "class": "Service_TCP",
+                    "virtualAddresses": [
+                        "10.0.3.10",
+                        "10.0.3.11"
+                    ],
+                    "virtualPort": 443,
+                    "pool": "app1_https_pool",
+                    "snat": "none"
+                },
+                "app1_https_pool": {
+                    "class": "Pool",
+                    "monitors": [
+                        "tcp-half-open"
+                    ],
+                    "members": [
+                        {
+                            "servicePort": 443,
+                            "serverAddresses": [
+                                "10.0.5.100"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "app1_http": {
+                "class": "Application",
+                "template": "generic",
+                "app1_http": {
+                    "class": "Service_TCP",
+                    "virtualAddresses": [
+                        "10.0.3.10",
+                        "10.0.3.11"
+                    ],
+                    "virtualPort": 80,
+                    "pool": "app1_http_pool",
+                    "snat": "none"
+                },
+                "app1_http_pool": {
+                    "class": "Pool",
+                    "monitors": [
+                        "tcp-half-open"
+                    ],
+                    "members": [
+                        {
+                            "servicePort": 80,
+                            "serverAddresses": [
+                                "10.0.5.100"
+                            ]
+                        }
+                    ]
+                }
+            }
 		}
     }
 }

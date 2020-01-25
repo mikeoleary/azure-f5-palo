@@ -1093,7 +1093,50 @@
             "location": "[variables('location')]",
             "name": "[variables('extNsgName')]",
             "properties": {
-                "securityRules": []
+                "securityRules": [
+                    {
+                        "name": "https_allow_443",
+                        "properties": {
+                            "access": "Allow",
+                            "description": "",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "443",
+                            "direction": "Inbound",
+                            "priority": 101,
+                            "protocol": "Tcp",
+                            "sourceAddressPrefix": "[parameters('restrictedSrcAddress')]",
+                            "sourcePortRange": "*"
+                        }
+                    },
+                    {
+                        "name": "http_allow_80",
+                        "properties": {
+                            "access": "Allow",
+                            "description": "",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "80",
+                            "direction": "Inbound",
+                            "priority": 101,
+                            "protocol": "Tcp",
+                            "sourceAddressPrefix": "[parameters('restrictedSrcAddress')]",
+                            "sourcePortRange": "*"
+                        }
+                    },
+                    {
+                        "name": "ssh_allow_22",
+                        "properties": {
+                            "access": "Allow",
+                            "description": "",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "22",
+                            "direction": "Inbound",
+                            "priority": 102,
+                            "protocol": "Tcp",
+                            "sourceAddressPrefix": "[parameters('restrictedSrcAddress')]",
+                            "sourcePortRange": "*"
+                        }
+                    }
+                ]
             },
             "tags": "[if(empty(variables('tagValues')), json('null'), variables('tagValues'))]",
             "type": "Microsoft.Network/networkSecurityGroups"
@@ -1153,7 +1196,27 @@
                             },
                             "frontendPort": 80,
                             "idleTimeoutInMinutes": 15,
-                            "loadDistribution": "Default",
+                            "loadDistribution": "SourceIPProtocol",
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/probes/tcp-probe-80')]"
+                            },
+                            "protocol": "Tcp"
+                        }
+                    },
+                    {
+                        "name": "lb-rule-443",
+                        "properties": {
+                            "backendAddressPool": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/backendAddressPools/loadBalancerBackEndExternal')]"
+                            },
+                            "backendPort": 443,
+                            "enableFloatingIP": false,
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEndExternal')]"
+                            },
+                            "frontendPort": 443,
+                            "idleTimeoutInMinutes": 15,
+                            "loadDistribution": "SourceIPProtocol",
                             "probe": {
                                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/probes/tcp-probe-80')]"
                             },
@@ -1173,7 +1236,7 @@
                             },
                             "frontendPort": 0,
                             "idleTimeoutInMinutes": 15,
-                            "loadDistribution": "Default",
+                            "loadDistribution": "SourceIPProtocol",
                             "probe": {
                                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/probes/tcp-probe-', parameters('internalLoadBalancerProbePort'))]"
                             },

@@ -571,12 +571,13 @@
                 ],
                 "loadBalancingRules": [
                     {
-                        "Name": "external-access",
+                        "Name": "external-access-443",
                         "properties": {
                             "backendAddressPool": {
                                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('externalLoadBalancerName')), '/backendAddressPools/loadBalancerBackEnd')]"
                             },
                             "backendPort": 443,
+                            "enableFloatingIP": true,
                             "frontendIPConfiguration": {
                                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('externalLoadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd1')]"
                             },
@@ -585,7 +586,28 @@
                             "probe": {
                                 "id": "[concat(variables('extLbId'),'/probes/httpsProbe')]"
                             },
-                            "protocol": "Tcp"
+                            "protocol": "Tcp",
+                            "loadDistribution": "SourceIPProtocol"
+                        }
+                    },
+                    {
+                        "Name": "external-access-80",
+                        "properties": {
+                            "backendAddressPool": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('externalLoadBalancerName')), '/backendAddressPools/loadBalancerBackEnd')]"
+                            },
+                            "backendPort": 80,
+                            "enableFloatingIP": true,
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('externalLoadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd1')]"
+                            },
+                            "frontendPort": 80,
+                            "idleTimeoutInMinutes": 15,
+                            "probe": {
+                                "id": "[concat(variables('extLbId'),'/probes/httpsProbe')]"
+                            },
+                            "protocol": "Tcp",
+                            "loadDistribution": "SourceIPProtocol"
                         }
                     }
                 ],
@@ -642,11 +664,11 @@
                             },
                             "frontendPort": "0",
                             "idleTimeoutInMinutes": 15,
-                            "loadDistribution": "Default",
                             "probe": {
                                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/probes/tcp-probe-443')]"
                             },
-                            "protocol": "All"
+                            "protocol": "All",
+                            "loadDistribution": "SourceIPProtocol"
                         }
                     }
                 ],
