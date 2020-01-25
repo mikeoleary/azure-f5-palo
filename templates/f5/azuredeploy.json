@@ -1116,7 +1116,7 @@
                             "destinationAddressPrefix": "*",
                             "destinationPortRange": "80",
                             "direction": "Inbound",
-                            "priority": 101,
+                            "priority": 102,
                             "protocol": "Tcp",
                             "sourceAddressPrefix": "[parameters('restrictedSrcAddress')]",
                             "sourcePortRange": "*"
