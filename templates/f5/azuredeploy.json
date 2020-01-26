@@ -436,6 +436,7 @@
         "appSubnet1Prefix": "[concat(parameters('vnetAddressPrefix'), '.5.0/24')]",
         "appServer1IP": "[concat(parameters('vnetAddressPrefix'), '.5.100')]",
         "appSubnet1Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet1Name'))]",
+        "appSubnet1NsgName": "appSubnet1Nsg",
         "appSubnet2Name": "appSubnet2",
         "appSubnet2Prefix": "[concat(parameters('vnetAddressPrefix'), '.6.0/24')]",
         "appSubnet2Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet2Name'))]",
@@ -732,7 +733,10 @@
                     {
                         "name": "[variables('appSubnet1Name')]",
                         "properties": {
-                            "addressPrefix": "[variables('appSubnet1Prefix')]"
+                            "addressPrefix": "[variables('appSubnet1Prefix')]",
+                            "networkSecurityGroup": {
+                                "id": "[variables('appSubnet1NsgName')]"
+                            }
                         }
                     },
                     {
@@ -1092,6 +1096,59 @@
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
             "name": "[variables('extNsgName')]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "https_allow_443",
+                        "properties": {
+                            "access": "Allow",
+                            "description": "",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "443",
+                            "direction": "Inbound",
+                            "priority": 101,
+                            "protocol": "Tcp",
+                            "sourceAddressPrefix": "[parameters('restrictedSrcAddress')]",
+                            "sourcePortRange": "*"
+                        }
+                    },
+                    {
+                        "name": "http_allow_80",
+                        "properties": {
+                            "access": "Allow",
+                            "description": "",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "80",
+                            "direction": "Inbound",
+                            "priority": 102,
+                            "protocol": "Tcp",
+                            "sourceAddressPrefix": "[parameters('restrictedSrcAddress')]",
+                            "sourcePortRange": "*"
+                        }
+                    },
+                    {
+                        "name": "ssh_allow_22",
+                        "properties": {
+                            "access": "Allow",
+                            "description": "",
+                            "destinationAddressPrefix": "*",
+                            "destinationPortRange": "22",
+                            "direction": "Inbound",
+                            "priority": 103,
+                            "protocol": "Tcp",
+                            "sourceAddressPrefix": "[parameters('restrictedSrcAddress')]",
+                            "sourcePortRange": "*"
+                        }
+                    }
+                ]
+            },
+            "tags": "[if(empty(variables('tagValues')), json('null'), variables('tagValues'))]",
+            "type": "Microsoft.Network/networkSecurityGroups"
+        },
+                {
+            "apiVersion": "[variables('networkApiVersion')]",
+            "location": "[variables('location')]",
+            "name": "[variables('appSubnet1NsgName')]",
             "properties": {
                 "securityRules": [
                     {
