@@ -526,13 +526,21 @@
 					"properties": {
 						"primary": true
 					}
-				}, {
+				}, 
+                {
 					"id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName'),'1'))]",
 					"properties": {
 						"primary": false
 					}
-				}, {
+				}, 
+                {
 					"id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName'),'2'))]",
+					"properties": {
+						"primary": false
+					}
+				},
+                {
+					"id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName'),'3'))]",
 					"properties": {
 						"primary": false
 					}
@@ -587,13 +595,21 @@
 					"properties": {
 						"primary": true
 					}
-				}, {
+				}, 
+                {
 					"id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName2'),'1'))]",
 					"properties": {
 						"primary": false
 					}
-				}, {
+				}, 
+                {
 					"id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName2'),'2'))]",
+					"properties": {
+						"primary": false
+					}
+                }, 
+                {
+					"id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName2'),'3'))]",
 					"properties": {
 						"primary": false
 					}
