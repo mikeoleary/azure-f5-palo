@@ -1026,13 +1026,21 @@
             "type": "Microsoft.Network/networkInterfaces"
             },
             {
-                "name": "[variables('routeTableExternalName')]",
-                "type": "Microsoft.Network/routeTables/routes",
-                "apiVersion": "[variables('networkApiVersion')]",
+            "name": "[variables('routeTableExternalName')]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "[variables('networkApiVersion')]",
+            "location": "[variables('location')]",
                 "properties": {
-                    "addressPrefix": "0.0.0.0/0",
-                    "nextHopType": "VirtualAppliance",
-                    "nextHopIpAddress": "10.0.2.50"
+                    "routes": [
+                    {
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.0.2.50"
+                        },
+                        "name": "defaultRoute"
+                    }
+                    ]
                 }
             },
             {
