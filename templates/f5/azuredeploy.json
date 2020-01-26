@@ -437,6 +437,7 @@
         "appServer1IP": "[concat(parameters('vnetAddressPrefix'), '.5.100')]",
         "appSubnet1Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet1Name'))]",
         "appSubnet1NsgName": "appSubnet1Nsg",
+        "appSubnet1NsgId": "[resourceId('Microsoft.Network/networkSecurityGroups/',concat(variables('appSubnet1NsgName')))]",
         "appSubnet2Name": "appSubnet2",
         "appSubnet2Prefix": "[concat(parameters('vnetAddressPrefix'), '.6.0/24')]",
         "appSubnet2Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet2Name'))]",
@@ -743,7 +744,7 @@
                         "properties": {
                             "addressPrefix": "[variables('appSubnet1Prefix')]",
                             "networkSecurityGroup": {
-                                "id": "[variables('appSubnet1NsgName')]"
+                                "id": "[variables('appSubnet1NsgId')]"
                             }
                         }
                     },
