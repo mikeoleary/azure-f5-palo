@@ -11,7 +11,7 @@
         </permissions>
       </entry>
       <entry name="azureuser">
-        <phash>$1$qxidnvax$yzZqb024kk9YZezKPTV6G/</phash>
+        <phash>$1$ricanhfu$UKPhekxLKCoopr1Par8rv/</phash>
         <permissions>
           <role-based>
             <superuser>yes</superuser>
@@ -113,6 +113,9 @@
                   <enable>no</enable>
                 </lldp>
               </layer3>
+            </entry>
+            <entry name="ethernet1/3">
+              <ha/>
             </entry>
           </ethernet>
         </interface>
@@ -513,6 +516,28 @@
             </initcfg>
           </management>
         </setting>
+        <high-availability>
+          <interface>
+            <ha1/>
+            <ha2>
+              <port>ethernet1/3</port>
+              <ip-address>10.0.7.10</ip-address>
+              <netmask>255.255.255.0</netmask>
+              <gateway>10.0.7.11</gateway>
+            </ha2>
+          </interface>
+          <group>
+            <group-id>1</group-id>
+            <peer-ip>10.0.0.7</peer-ip>
+            <election-option>
+              <preemptive>yes</preemptive>
+              <timers>
+                <recommended/>
+              </timers>
+            </election-option>
+          </group>
+          <enabled>yes</enabled>
+        </high-availability>
       </deviceconfig>
       <vsys>
         <entry name="vsys1">
@@ -551,7 +576,7 @@
                     <member>any</member>
                   </source>
                   <destination>
-                    <member>52.167.73.115</member>
+                    <member>40.70.227.122</member>
                   </destination>
                   <source-user>
                     <member>any</member>
@@ -590,7 +615,7 @@
                     <member>any</member>
                   </source>
                   <destination>
-                    <member>52.167.73.115</member>
+                    <member>40.70.227.122</member>
                   </destination>
                   <service>any</service>
                 </entry>

@@ -11,7 +11,7 @@
         </permissions>
       </entry>
       <entry name="azureuser">
-        <phash>$1$xrkyeejg$qNA5VF/9eZGk.XOoc4WV8.</phash>
+        <phash>$1$ricanhfu$UKPhekxLKCoopr1Par8rv/</phash>
         <permissions>
           <role-based>
             <superuser>yes</superuser>
@@ -89,7 +89,7 @@
             <entry name="ethernet1/1">
               <layer3>
                 <ip>
-                  <entry name="10.0.1.11/24"/>
+                  <entry name="10.0.1.10/24"/>
                 </ip>
                 <ndp-proxy>
                   <enabled>no</enabled>
@@ -103,7 +103,7 @@
             <entry name="ethernet1/2">
               <layer3>
                 <ip>
-                  <entry name="10.0.2.11/24"/>
+                  <entry name="10.0.2.10/24"/>
                 </ip>
                 <ndp-proxy>
                   <enabled>no</enabled>
@@ -113,6 +113,9 @@
                   <enable>no</enable>
                 </lldp>
               </layer3>
+            </entry>
+            <entry name="ethernet1/3">
+              <ha/>
             </entry>
           </ethernet>
         </interface>
@@ -239,6 +242,7 @@
               </entry>
             </global-protect-app-crypto-profiles>
           </crypto-profiles>
+          <gateway/>
         </ike>
         <qos>
           <profile>
@@ -330,18 +334,17 @@
                     <destination>0.0.0.0/0</destination>
                   </entry>
                   <entry name="internalRoute">
-                    <path-monitor>
-                      <enable>no</enable>
-                      <failure-condition>any</failure-condition>
-                      <hold-time>2</hold-time>
-                    </path-monitor>
                     <nexthop>
                       <next-vr>virtualrouter2</next-vr>
                     </nexthop>
                     <bfd>
                       <profile>None</profile>
                     </bfd>
-                    <interface>ethernet1/1</interface>
+                    <path-monitor>
+                      <enable>no</enable>
+                      <failure-condition>any</failure-condition>
+                      <hold-time>2</hold-time>
+                    </path-monitor>
                     <metric>10</metric>
                     <destination>10.0.0.0/8</destination>
                     <route-table>
@@ -385,24 +388,6 @@
             <routing-table>
               <ip>
                 <static-route>
-                  <entry name="ILBHealthCheck">
-                    <nexthop>
-                      <ip-address>10.0.2.1</ip-address>
-                    </nexthop>
-                    <bfd>
-                      <profile>None</profile>
-                    </bfd>
-                    <path-monitor>
-                      <enable>no</enable>
-                      <failure-condition>any</failure-condition>
-                      <hold-time>2</hold-time>
-                    </path-monitor>
-                    <metric>10</metric>
-                    <destination>168.63.129.16/32</destination>
-                    <route-table>
-                      <unicast/>
-                    </route-table>
-                  </entry>
                   <entry name="internalRoute">
                     <nexthop>
                       <ip-address>10.0.2.1</ip-address>
@@ -418,6 +403,25 @@
                     <interface>ethernet1/2</interface>
                     <metric>10</metric>
                     <destination>10.0.0.0/8</destination>
+                    <route-table>
+                      <unicast/>
+                    </route-table>
+                  </entry>
+                  <entry name="LBhealthcheck">
+                    <nexthop>
+                      <ip-address>10.0.2.1</ip-address>
+                    </nexthop>
+                    <bfd>
+                      <profile>None</profile>
+                    </bfd>
+                    <path-monitor>
+                      <enable>no</enable>
+                      <failure-condition>any</failure-condition>
+                      <hold-time>2</hold-time>
+                    </path-monitor>
+                    <interface>ethernet1/2</interface>
+                    <metric>10</metric>
+                    <destination>168.63.129.16/32</destination>
                     <route-table>
                       <unicast/>
                     </route-table>
@@ -449,6 +453,11 @@
             </interface>
           </entry>
         </virtual-router>
+        <tunnel>
+          <ipsec/>
+          <global-protect-gateway/>
+          <global-protect-site-to-site/>
+        </tunnel>
       </network>
       <deviceconfig>
         <system>
@@ -495,7 +504,7 @@
           <management>
             <hostname-type-in-syslog>FQDN</hostname-type-in-syslog>
             <initcfg>
-              <hostname>pavm2</hostname>
+              <hostname>pavm1</hostname>
               <username>azureuser</username>
               <type>
                 <dhcp-client>
@@ -505,7 +514,7 @@
                   <accept-dhcp-domain>no</accept-dhcp-domain>
                 </dhcp-client>
               </type>
-              <ip-address>10.0.0.7</ip-address>
+              <ip-address>10.0.0.6</ip-address>
               <default-gateway>10.0.0.1</default-gateway>
               <netmask>255.255.255.0</netmask>
               <dns-primary>8.8.8.8</dns-primary>
@@ -513,6 +522,29 @@
             </initcfg>
           </management>
         </setting>
+        <high-availability>
+          <interface>
+            <ha1/>
+            <ha2>
+              <port>ethernet1/3</port>
+              <ip-address>10.0.7.11</ip-address>
+              <netmask>255.255.255.0</netmask>
+              <gateway>10.0.7.10</gateway>
+            </ha2>
+          </interface>
+          <group>
+            <group-id>1</group-id>
+            <peer-ip>10.0.0.6</peer-ip>
+            <election-option>
+              <device-priority>200</device-priority>
+              <preemptive>yes</preemptive>
+              <timers>
+                <recommended/>
+              </timers>
+            </election-option>
+          </group>
+          <enabled>yes</enabled>
+        </high-availability>
       </deviceconfig>
       <vsys>
         <entry name="vsys1">
@@ -540,7 +572,7 @@
           <rulebase>
             <security>
               <rules>
-                <entry name="allow-inbound-app1" uuid="1069c3dd-6701-4a05-b76b-25dbbbbb810c">
+                <entry name="allow-inbound-app1" uuid="944f66ed-9d8c-4533-aa55-7234b85c4a6b">
                   <to>
                     <member>any</member>
                   </to>
@@ -551,7 +583,7 @@
                     <member>any</member>
                   </source>
                   <destination>
-                    <member>52.167.73.115</member>
+                    <member>40.70.227.122</member>
                   </destination>
                   <source-user>
                     <member>any</member>
@@ -576,7 +608,7 @@
             </security>
             <nat>
               <rules>
-                <entry name="app1Nat" uuid="97cad83f-bc8b-4047-967d-b9f20ee1ee81">
+                <entry name="app1Nat" uuid="dc3d2219-c47f-4bc5-8b3d-e000b088d90e">
                   <destination-translation>
                     <translated-address>10.0.3.50</translated-address>
                   </destination-translation>
@@ -590,7 +622,7 @@
                     <member>any</member>
                   </source>
                   <destination>
-                    <member>52.167.73.115</member>
+                    <member>40.70.227.122</member>
                   </destination>
                   <service>any</service>
                 </entry>

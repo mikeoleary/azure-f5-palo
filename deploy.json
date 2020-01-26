@@ -113,6 +113,9 @@
                                 "subnet2id" : {
                                     "value": "[reference('f5linkedTemplate').outputs.trustSubnetId.value]"
                                 },
+                                "subnet3id" : {
+                                    "value": "[reference('f5linkedTemplate').outputs.haSubnetId.value]"
+                                },
                                 "storageAccountName" : {
                                     "value": "[reference('salinkedTemplate').outputs.storageAccountName.value]"
                                 },

@@ -440,6 +440,9 @@
         "appSubnet2Name": "appSubnet2",
         "appSubnet2Prefix": "[concat(parameters('vnetAddressPrefix'), '.6.0/24')]",
         "appSubnet2Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet2Name'))]",
+        "haSubnetName":"haSubnet",
+        "haSubnetPrefix":"[concat(parameters('vnetAddressPrefix'), '.7.0/24')]",
+        "haSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('haSubnetName'))]",
         "routeTableExternalName": "routeTableExternal",
         "mgmtSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.0.5')]",
         "extSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.3.5')]",
@@ -748,6 +751,12 @@
                         "name": "[variables('appSubnet2Name')]",
                         "properties": {
                             "addressPrefix": "[variables('appSubnet2Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('haSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('haSubnetPrefix')]"
                         }
                     }
                 ]
@@ -1584,6 +1593,10 @@
         "appSubnet2Id": {
             "type": "string",
             "value": "[variables('appSubnet2Id')]"
+        },
+        "haSubnetId": {
+            "type": "string",
+            "value": "[variables('haSubnetId')]"
         },
         "appServer1IP":{
             "type": "string",
