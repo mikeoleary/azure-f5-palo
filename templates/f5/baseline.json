@@ -18,11 +18,11 @@
 				"layer4": "any",
 				"translateServerAddress": false,
 				"translateServerPort": false,
-						"virtualAddresses": [
-							"0.0.0.0"
-						],
-						"virtualPort": 0,
-						"snat": "auto",
+                "virtualAddresses": [
+                    "0.0.0.0"
+                ],
+                "virtualPort": 0,
+                "snat": "auto",
 				"allowVlans": 
 				[
 					"internal"
@@ -40,7 +40,7 @@
                     ],
                     "virtualPort": 443,
                     "pool": "app1_https_pool",
-                    "snat": "none"
+                    "snat": "auto"
                 },
                 "app1_https_pool": {
                     "class": "Pool",
@@ -68,7 +68,7 @@
                     ],
                     "virtualPort": 80,
                     "pool": "app1_http_pool",
-                    "snat": "none"
+                    "snat": "auto"
                 },
                 "app1_http_pool": {
                     "class": "Pool",
