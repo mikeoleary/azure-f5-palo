@@ -440,6 +440,7 @@
         "appSubnet2Name": "appSubnet2",
         "appSubnet2Prefix": "[concat(parameters('vnetAddressPrefix'), '.6.0/24')]",
         "appSubnet2Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet2Name'))]",
+        "routeTableExternalName": "routeTableExternal",
         "mgmtSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.0.5')]",
         "extSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.3.5')]",
         "intSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.4.5')]",
@@ -681,7 +682,8 @@
                 "[variables('intNsgId')]",
                 "[variables('untrustNsgId')]",
                 "[variables('trustNsgId')]",
-                "[variables('mgmtNsgId')]"
+                "[variables('mgmtNsgId')]",
+                "[resourceId('Microsoft.Network/routeTables', variables('routeTableExternalName'))]"
             ],
             "name": "[variables('virtualNetworkName')]",
             "properties": {
@@ -706,6 +708,9 @@
                             "addressPrefix": "[variables('extSubnetPrefix')]",
                             "networkSecurityGroup": {
                                 "id": "[variables('extNsgId')]"
+                            },
+                            "routeTable": {
+                                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableExternalName'))]"
                             }
                         }
                     },
@@ -1010,6 +1015,16 @@
             },
             "tags": "[if(empty(variables('tagValues')), json('null'), variables('tagValues'))]",
             "type": "Microsoft.Network/networkInterfaces"
+            },
+            {
+                "name": "[variables('routeTableExternalName')]",
+                "type": "Microsoft.Network/routeTables/routes",
+                "apiVersion": "[variables('networkApiVersion')]",
+                "properties": {
+                    "addressPrefix": "0.0.0.0/0",
+                    "nextHopType": "VirtualAppliance",
+                    "nextHopIpAddress": "10.0.2.50"
+                }
             },
             {
             "apiVersion": "[variables('networkApiVersion')]",
