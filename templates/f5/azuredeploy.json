@@ -445,6 +445,7 @@
         "haSubnetPrefix":"[concat(parameters('vnetAddressPrefix'), '.7.0/24')]",
         "haSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('haSubnetName'))]",
         "routeTableExternalName": "routeTableExternal",
+        "routeTableExternalId":"[resourceId('Microsoft.Network/routeTables', variables('routeTableExternalName'))]",
         "mgmtSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.0.5')]",
         "extSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.3.5')]",
         "intSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.4.5')]",
@@ -687,7 +688,7 @@
                 "[variables('untrustNsgId')]",
                 "[variables('trustNsgId')]",
                 "[variables('mgmtNsgId')]",
-                "[resourceId('Microsoft.Network/routeTables', variables('routeTableExternalName'))]"
+                "[variables('routeTableExternalId')]"
             ],
             "name": "[variables('virtualNetworkName')]",
             "properties": {
@@ -714,7 +715,7 @@
                                 "id": "[variables('extNsgId')]"
                             },
                             "routeTable": {
-                                "id": "[resourceId('Microsoft.Network/routeTables', variables('routeTableExternalName'))]"
+                                "id": "[variables('routeTableExternalId')]"
                             }
                         }
                     },
@@ -1606,6 +1607,18 @@
         "haSubnetId": {
             "type": "string",
             "value": "[variables('haSubnetId')]"
+        },
+        "extSubnetName": {
+            "type": "string",
+            "value": "[variables('extSubnetName')]"
+        },
+        "routeTableExternalId": {
+            "type": "string",
+            "value": "[variables('routeTableExternalId')]"
+        },
+        "extNsgId":{
+            "type": "string",
+            "value": "[variables('extNsgId')]"
         },
         "appServer1IP":{
             "type": "string",
