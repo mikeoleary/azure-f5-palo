@@ -28,7 +28,23 @@
 					"internal"
 				]
 				}
-			},
+            },
+            "health_probe_vs": {
+                "class": "Application",
+                "template": "generic",
+                "health_probe_vs": {
+                    "class": "Service_TCP",
+                    "virtualAddresses": [
+                        "10.0.4.10",
+                        "10.0.4.11"
+                    ],
+                    "virtualPort": 3456,
+                    "allowVlans": 
+                    [
+                        "internal"
+                    ]
+                }
+            },
 			"app1_https": {
                 "class": "Application",
                 "template": "generic",
