@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworkName":{
+             "type": "string",
+            "metadata": {
+                "description": "Name of the existing Vnet"
+            }           
+        },
+        "extSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the subnet"
+            }
+        },
+        "extSubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "IP range of subnet"
+            }
+        },
+        "extNsgId": {
+            "type": "string",
+            "metadata": {
+                "description": "ID of Network Security Group"
+            }
+        },
+        "routeTableExternalId": {
+            "type": "string",
+            "metadata": {
+                "description": "ID of ext route table"
+            }
+        }
+    },
+    "variables": {
+        "networkApiVersion": "2017-11-01"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('virtualNetworkName'), '/', parameters('extSubnetName'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "[variables('networkApiVersion')]",
+            "properties": {
+                "addressPrefix": "[parameters('extSubnetPrefix')]",
+                "networkSecurityGroup": {
+                    "id": "[parameters('extNsgId')]"
+                },
+                "routeTable": {
+                    "id": "[parameters('routeTableExternalId')]"
+                }
+            }
+        }
+    ]
+}

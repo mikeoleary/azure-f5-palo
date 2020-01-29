@@ -687,8 +687,7 @@
                 "[variables('intNsgId')]",
                 "[variables('untrustNsgId')]",
                 "[variables('trustNsgId')]",
-                "[variables('mgmtNsgId')]",
-                "[variables('routeTableExternalId')]"
+                "[variables('mgmtNsgId')]"
             ],
             "name": "[variables('virtualNetworkName')]",
             "properties": {
@@ -713,9 +712,6 @@
                             "addressPrefix": "[variables('extSubnetPrefix')]",
                             "networkSecurityGroup": {
                                 "id": "[variables('extNsgId')]"
-                            },
-                            "routeTable": {
-                                "id": "[variables('routeTableExternalId')]"
                             }
                         }
                     },
@@ -1576,6 +1572,10 @@
             "type": "string",
             "value": "[reference(variables('virtualNetworkName')).AddressSpace.AddressPrefixes[0]]"
         },
+        "virtualNetworkName": {
+            "type": "string",
+            "value": "[variables('virtualNetworkName')]"
+        },
         "mgmtSubnetId": {
             "type": "string",
             "value": "[variables('mgmtSubnetId')]"
@@ -1619,6 +1619,10 @@
         "extNsgId":{
             "type": "string",
             "value": "[variables('extNsgId')]"
+        },
+        "extSubnetPrefix":{
+            "type": "string",
+            "value": "[variables('extSubnetPrefix')]"
         },
         "appServer1IP":{
             "type": "string",
