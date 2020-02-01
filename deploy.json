@@ -170,6 +170,9 @@
                                 "contentVersion":"1.0.0.0"
                             },
                             "parameters": {
+                                "virtualnetworkName": {
+                                    "value": "[reference('f5linkedTemplate').outputs.virtualnetworkName.value]"
+                                },
                                 "extSubnetName": {
                                     "value": "[reference('f5linkedTemplate').outputs.extSubnetName.value]"
                                 },
