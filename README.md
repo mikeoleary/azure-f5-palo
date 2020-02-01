@@ -4,6 +4,9 @@ Deploys a security stack where PaloAlto firewalls are internet-facing, and F5 BI
 ## Architecture
 
 ## Instructions to deploy
+To deploy via the web interface, click the button below.
+[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmikeoleary%2Fazure-f5-palo%2Fmaster%2Fdeploy.json)
+
 To deploy via Powershell, download the file Deploy_via_Powershell.ps1 and run a command similar to the following:
 `.\Deploy_via_PS.ps1 -adminUsername azureuser -adminPasswordOrKey MY-PASSWORD -dnsLabel SOME-UNIQUE-VALUE -resourceGroupName YOUR-RESOURCE-GROUP`
 
