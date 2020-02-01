@@ -29,14 +29,14 @@
         "sourceStorageURL": "[parameters('sourceStorageURL')]",
         "containerImageName": "samcogan/azcopy",
         "lbpublicIPName": "loadBalancerPublicIP",
-        "lbpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('lbpublicIPName'))]",
+        "lbpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('lbpublicIPName'))]",
         "singleQuote": "'"
     },
     "resources": [
         {
             "apiVersion": "2018-10-01",
             "type": "Microsoft.Network/publicIPAddresses",
-            "name": "lbpublicIPName",
+            "name": "[variables('lbpublicIPName')]",
             "sku": {
                 "name": "Standard"
             },
@@ -115,7 +115,7 @@
         },
         "appUrl": {
             "type": "string",
-            "value": "[concat('https://',reference(variables('lbpublicIPId')).IpAddress)]"
+            "value": "[concat('https://', reference(variables('lbpublicIPId')).IpAddress)]"
         }
     }
 }
