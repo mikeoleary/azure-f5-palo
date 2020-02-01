@@ -27,24 +27,9 @@
         "storageAccountName": "[concat(parameters('StorageAccountName'),take(uniqueString(resourceGroup().id),5))]",
         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]",
         "sourceStorageURL": "[parameters('sourceStorageURL')]",
-        "containerImageName": "samcogan/azcopy",
-        "lbpublicIPName": "loadBalancerPublicIP",
-        "lbpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('lbpublicIPName'))]",
-        "singleQuote": "'"
+        "containerImageName": "samcogan/azcopy"
     },
     "resources": [
-        {
-            "apiVersion": "2018-10-01",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "name": "myPublicIP",
-            "sku": {
-                "name": "Standard"
-            },
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "publicIPAllocationMethod": "Static"
-            }
-        }, 
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2018-02-01",
@@ -81,9 +66,15 @@
                         "name": "[concat(variables('StorageAccountName'),'-aci')]",
                         "properties": {
                             "command": [
-                                "/bin/bash",
-                                "-c",
-                                "[concat('azcopy --source ', variables('sourceStorageURL'),' --destination /var/tmp --recursive ; ','sed -i ', variables('singleQuote'), 's/PUBLIC_IP/', reference(variables('lbpublicIPId')).ipAddress,'/g', variables('singleQuote'), ' /var/tmp/pavm1/config/bootstrap.xml /var/tmp/pavm1/config/bootstrap.xml ; ', 'azcopy --source /var/tmp* --destination ', concat('https://',variables('storageAccountName'),'.file.core.windows.net/',parameters('ContainerName')),' --dest-key ', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1,' --recursive --quiet')]"
+                                "azcopy",
+                                "--source",
+                                "[variables('sourceStorageURL')]",
+                                "--destination",
+                                "[concat('https://',variables('storageAccountName'),'.file.core.windows.net/',parameters('ContainerName'))]",
+                                "--dest-key",
+                                "[listKeys(variables('storageAccountid') ,'2015-05-01-preview').key1]",
+                                "--recursive",
+                                "--quiet"
                             ],
                             "image": "[variables('containerImageName')]",
                             "resources": {
@@ -96,7 +87,7 @@
                     }
                 ],
                 "osType": "Linux",
-                "restartPolicy": "Always"
+                "restartPolicy": "Never"
             }
         }
     ],
@@ -108,14 +99,6 @@
         "storageAccountName": {
             "type": "string",
             "value": "[variables('storageAccountName')]"
-        },
-        "lbpublicIPId":{
-            "type": "string",
-            "value": "[variables('lbpublicIPId')]"
-        },
-        "appUrl": {
-            "type": "string",
-            "value": "[concat('https://',reference(variables('lbpublicIPId')).IpAddress)]"
         }
     }
 }

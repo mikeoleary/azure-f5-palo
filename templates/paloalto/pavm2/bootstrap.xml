@@ -11,7 +11,7 @@
         </permissions>
       </entry>
       <entry name="azureuser">
-        <phash>$1$nodwolfr$HZkZLSp2eV5k.jEIKPNDB/</phash>
+        <phash>$1$ricanhfu$UKPhekxLKCoopr1Par8rv/</phash>
         <permissions>
           <role-based>
             <superuser>yes</superuser>
@@ -89,9 +89,7 @@
             <entry name="ethernet1/1">
               <layer3>
                 <ip>
-                  <entry name="10.0.1.10/32"/>
-                  <entry name="10.0.1.11/32"/>
-                  <entry name="10.0.1.1/24"/>
+                  <entry name="10.0.1.10/24"/>
                 </ip>
                 <ndp-proxy>
                   <enabled>no</enabled>
@@ -105,9 +103,7 @@
             <entry name="ethernet1/2">
               <layer3>
                 <ip>
-                  <entry name="10.0.2.10/32"/>
-                  <entry name="10.0.2.11/32"/>
-                  <entry name="10.0.2.1/24"/>
+                  <entry name="10.0.2.10/24"/>
                 </ip>
                 <ndp-proxy>
                   <enabled>no</enabled>
@@ -587,8 +583,7 @@
                     <member>any</member>
                   </source>
                   <destination>
-                    <member>10.0.1.10</member>
-                    <member>10.0.1.11</member>
+                    <member>PUBLIC_IP</member>
                   </destination>
                   <source-user>
                     <member>any</member>
@@ -609,118 +604,27 @@
                   <action>allow</action>
                   <log-start>yes</log-start>
                 </entry>
-                <entry name="allow Azure health probes" uuid="ce2fb98b-5828-4f63-9938-eabf3f3acf8f">
-                  <to>
-                    <member>trust</member>
-                    <member>untrust</member>
-                  </to>
-                  <from>
-                    <member>any</member>
-                  </from>
-                  <source>
-                    <member>168.63.129.16</member>
-                  </source>
-                  <destination>
-                    <member>any</member>
-                  </destination>
-                  <source-user>
-                    <member>any</member>
-                  </source-user>
-                  <category>
-                    <member>any</member>
-                  </category>
-                  <application>
-                    <member>any</member>
-                  </application>
-                  <service>
-                    <member>application-default</member>
-                  </service>
-                  <hip-profiles>
-                    <member>any</member>
-                  </hip-profiles>
-                  <action>allow</action>
-                </entry>
               </rules>
             </security>
             <nat>
               <rules>
-                <entry name="healthprobe1" uuid="a6a1dffe-c66b-4af9-bec8-7b190495b29c">
-                  <source-translation>
-                    <static-ip>
-                      <translated-address>10.0.2.10</translated-address>
-                      <bi-directional>yes</bi-directional>
-                    </static-ip>
-                  </source-translation>
-                  <to>
-                    <member>untrust</member>
-                  </to>
-                  <from>
-                    <member>any</member>
-                  </from>
-                  <source>
-                    <member>168.63.129.16</member>
-                  </source>
-                  <destination>
-                    <member>10.0.1.10</member>
-                  </destination>
-                  <service>any</service>
-                </entry>
-                <entry name="healthprobe2" uuid="8ef7b9d6-814e-4a89-b4c5-0c65ebbe986e">
-                  <source-translation>
-                    <static-ip>
-                      <translated-address>10.0.2.11</translated-address>
-                      <bi-directional>yes</bi-directional>
-                    </static-ip>
-                  </source-translation>
-                  <to>
-                    <member>untrust</member>
-                  </to>
-                  <from>
-                    <member>any</member>
-                  </from>
-                  <source>
-                    <member>168.63.129.16</member>
-                  </source>
-                  <destination>
-                    <member>10.0.1.11</member>
-                  </destination>
-                  <service>any</service>
-                </entry>
-                <entry name="app1Nat1" uuid="df61085d-e337-4db3-aeba-cd4c5f074923">
-                  <to>
-                    <member>untrust</member>
-                  </to>
-                  <from>
-                    <member>any</member>
-                  </from>
-                  <source>
-                    <member>any</member>
-                  </source>
-                  <destination>
-                    <member>10.0.1.10</member>
-                  </destination>
-                  <service>any</service>
+                <entry name="app1Nat" uuid="dc3d2219-c47f-4bc5-8b3d-e000b088d90e">
                   <destination-translation>
                     <translated-address>10.0.3.50</translated-address>
                   </destination-translation>
-                </entry>
-                <entry name="app1Nat2" uuid="9214a9f1-e435-42cf-9252-af019c7f71b3">
                   <to>
                     <member>untrust</member>
                   </to>
                   <from>
-                    <member>any</member>
+                    <member>untrust</member>
                   </from>
                   <source>
                     <member>any</member>
                   </source>
                   <destination>
-                    <member>10.0.1.11</member>
+                    <member>PUBLIC_IP</member>
                   </destination>
                   <service>any</service>
-                  <destination-translation>
-                    <translated-address>10.0.3.50</translated-address>
-                  </destination-translation>
                 </entry>
               </rules>
             </nat>

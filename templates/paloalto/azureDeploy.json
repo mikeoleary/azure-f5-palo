@@ -173,7 +173,13 @@
             "metadata": {
                 "description": "Name of files service in Azure Storage Account"
             }
-        }                      
+        },
+        "lbpublicIPId": {
+            "type": "string",
+            "metadata": {
+                "description": "Id of public IP that will be assigned to Ext LB"
+            }
+        }
     },
     "variables": {
         "apiVersion": "2018-10-01",
@@ -187,8 +193,6 @@
         "internalLoadBalancerAddress": "10.0.2.50",
         "fwpublicIPName": "[concat(parameters('vmName'), '-fwMgmtPublicIP')]",
         "fwpublicIPName2": "[concat(parameters('vmName2'), '-fwMgmtPublicIP')]",
-        "lbpublicIPName": "paloalto-loadbalancer-publicIP",
-        "lbpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('lbpublicIPName'))]",
         "location": "[resourceGroup().location]",
         "nicName": "[concat(parameters('vmName'), '-eth')]",
         "nicName2": "[concat(parameters('vmName2'), '-eth')]",
@@ -249,18 +253,6 @@
             }
         }
     },
-    {
-        "apiVersion": "[variables('apiVersion')]",
-        "type": "Microsoft.Network/publicIPAddresses",
-        "name": "[variables('lbpublicIPName')]",
-        "sku": {
-            "name": "Standard"
-        },
-        "location": "[variables('location')]",
-        "properties": {
-            "publicIPAllocationMethod": "[variables('publicIPAddressType')]"
-        }
-    }, 
     {
         "apiVersion": "[variables('apiVersion')]",
         "type": "Microsoft.Network/networkInterfaces",
@@ -621,9 +613,6 @@
             "apiVersion": "[variables('networkApiVersion')]",
             "location": "[variables('location')]",
             "name": "[variables('externalLoadBalancerName')]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/publicIpAddresses/', variables('lbpublicIPName'))]"
-            ],
             "properties": {
                 "backendAddressPools": [
                     {
@@ -635,7 +624,7 @@
                         "name": "loadBalancerFrontEnd1",
                         "properties": {
                             "publicIPAddress": {
-                                "id": "[variables('lbpublicIPId')]"
+                                "id": "[parameters('lbpublicIPId')]"
                             }
                         }
                     }
@@ -769,10 +758,6 @@
         "fw2mgmtIP": {
             "type": "string",
             "value": "[concat('https://',reference(variables('FWpublicIPId2')).dnsSettings.fqdn)]"
-        },
-        "appUrl": {
-            "type": "string",
-            "value": "[concat('https://',reference(variables('lbpublicIPId')).IpAddress)]"
         }
     }
 }

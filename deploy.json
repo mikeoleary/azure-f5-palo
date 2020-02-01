@@ -121,6 +121,9 @@
                                 },
                                 "StorageAccountKey" : {
                                     "value": "[reference('salinkedTemplate').outputs.StorageAccountKey.value]"
+                                },
+                                "lbpublicIPId": {
+                                    "value": "[reference('salinkedTemplate').outputs.lbpublicIPId.value]"
                                 }
                             }
                         }
@@ -173,8 +176,8 @@
                                 "extSubnetPrefix": {
                                     "value": "[reference('f5linkedTemplate').outputs.extSubnetPrefix.value]"
                                 },
-                                "extSubnetNsgId": {
-                                    "value": "[reference('f5linkedTemplate').outputs.extSubnetNsgId.value]"
+                                "extNsgId": {
+                                    "value": "[reference('f5linkedTemplate').outputs.extNsgId.value]"
                                 },
                                 "routeTableExternalId": {
                                     "value": "[reference('f5linkedTemplate').outputs.routeTableExternalId.value]"
@@ -186,7 +189,7 @@
     "outputs": {
         "appUrl": {
             "type": "string",
-            "value": "[reference('palinkedTemplate').outputs.appUrl.value]"
+            "value": "[reference('salinkedTemplate').outputs.appUrl.value]"
             },      
         "fw1mgmtIP": {
             "type": "string",
