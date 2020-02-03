@@ -8,16 +8,34 @@
                 "description": "Name of the existing Vnet"
             }           
         },
+        "appSubnet1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the app subnet"
+            }
+        },
+        "appSubnet1Prefix": {
+            "type": "string",
+            "metadata": {
+                "description": "IP range of app 1 subnet"
+            }
+        },
+        "routeTableAppSubnet1Id": {
+            "type": "string",
+            "metadata": {
+                "description": "ID of app subnet 1 route table"
+            }
+        },
         "extSubnetName": {
             "type": "string",
             "metadata": {
-                "description": "Name of the subnet"
+                "description": "Name of the ext subnet"
             }
         },
         "extSubnetPrefix": {
             "type": "string",
             "metadata": {
-                "description": "IP range of subnet"
+                "description": "IP range of ext subnet"
             }
         },
         "extNsgId": {
@@ -48,6 +66,17 @@
                 },
                 "routeTable": {
                     "id": "[parameters('routeTableExternalId')]"
+                }
+            }
+        },
+                {
+            "name": "[concat(parameters('virtualNetworkName'), '/', parameters('appSubnet1Name'))]",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "[variables('networkApiVersion')]",
+            "properties": {
+                "addressPrefix": "[parameters('appSubnet1Prefix')]",
+                "routeTable": {
+                    "id": "[parameters('routeTableAppSubnet1Id')]"
                 }
             }
         }

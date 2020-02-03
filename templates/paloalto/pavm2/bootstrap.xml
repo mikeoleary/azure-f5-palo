@@ -89,7 +89,7 @@
             <entry name="ethernet1/1">
               <layer3>
                 <ip>
-                  <entry name="10.0.1.10/24"/>
+                  <entry name="10.0.1.11/24"/>
                 </ip>
                 <ndp-proxy>
                   <enabled>no</enabled>
@@ -103,7 +103,7 @@
             <entry name="ethernet1/2">
               <layer3>
                 <ip>
-                  <entry name="10.0.2.10/24"/>
+                  <entry name="10.0.2.11/24"/>
                 </ip>
                 <ndp-proxy>
                   <enabled>no</enabled>
@@ -504,7 +504,7 @@
           <management>
             <hostname-type-in-syslog>FQDN</hostname-type-in-syslog>
             <initcfg>
-              <hostname>pavm1</hostname>
+              <hostname>pavm2</hostname>
               <username>azureuser</username>
               <type>
                 <dhcp-client>

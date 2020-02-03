@@ -56,7 +56,7 @@
                     ],
                     "virtualPort": 443,
                     "pool": "app1_https_pool",
-                    "snat": "auto"
+                    "snat": "none"
                 },
                 "app1_https_pool": {
                     "class": "Pool",
@@ -84,7 +84,7 @@
                     ],
                     "virtualPort": 80,
                     "pool": "app1_http_pool",
-                    "snat": "auto"
+                    "snat": "none"
                 },
                 "app1_http_pool": {
                     "class": "Pool",

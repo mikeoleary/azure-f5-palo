@@ -446,11 +446,14 @@
         "haSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('haSubnetName'))]",
         "routeTableExternalName": "routeTableExternal",
         "routeTableExternalId":"[resourceId('Microsoft.Network/routeTables', variables('routeTableExternalName'))]",
+        "routeTableAppSubnet1Name": "routeTableAppSubnet1",
+        "routeTableAppSubnet1Id":"[resourceId('Microsoft.Network/routeTables', variables('routeTableAppSubnet1Name'))]",
         "mgmtSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.0.5')]",
         "extSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.3.5')]",
         "intSubnetPrivateAddress1": "[concat(parameters('vnetAddressPrefix'), '.4.5')]",
         "intSubnetPrivateAddress2": "[concat(parameters('vnetAddressPrefix'), '.4.10')]",
         "intSubnetPrivateAddress3": "[concat(parameters('vnetAddressPrefix'), '.4.11')]",
+        "intSubnetGWAddress": "[concat(parameters('vnetAddressPrefix'), '.4.1')]",
         "internalLoadBalancerAddress": "[concat(parameters('vnetAddressPrefix'), '.3.50')]",
         "internalLoadBalancerAddress2": "[concat(parameters('vnetAddressPrefix'), '.4.50')]",
         "availabilitySetName": "[concat(variables('dnsLabel'), '-avset')]",
@@ -568,7 +571,7 @@
         "newDataStorageAccountName": "[concat(uniqueString(variables('dnsLabel'), resourceGroup().id, deployment().name), 'data000')]",
         "dataStorageAccountType": "Standard_LRS",
         "deploymentId": "[concat(variables('subscriptionId'), resourceGroup().id, deployment().name, variables('dnsLabel'))]",
-        "customConfig": "### START (INPUT) CUSTOM CONFIGURATION HERE\n",
+        "customConfig": "[concat('tmsh create net route add 10.0.0.0/8 gw ', parameters('vnetAddressPrefix'), variables('intSubnetGWAddress'))]",
         "allowUsageAnalytics": {
             "No": {
                 "hashCmd": "echo AllowUsageAnalytics:No",
@@ -1035,6 +1038,24 @@
                             "addressPrefix": "0.0.0.0/0",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "10.0.2.50"
+                        },
+                        "name": "defaultRoute"
+                    }
+                    ]
+                }
+            },
+            {
+            "name": "[variables('routeTableappSubnet1Name')]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "[variables('networkApiVersion')]",
+            "location": "[variables('location')]",
+                "properties": {
+                    "routes": [
+                    {
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.0.4.50"
                         },
                         "name": "defaultRoute"
                     }
@@ -1599,6 +1620,18 @@
         "appSubnet1Id": {
             "type": "string",
             "value": "[variables('appSubnet1Id')]"
+        },
+        "appSubnet1Name": {
+            "type": "string",
+            "value": "[variables('appSubnet1Name')]"
+        },
+        "appSubnet1Prefix": {
+            "type": "string",
+            "value": "[variables('appSubnet1Prefix')]"
+        },
+        "routeTableAppSubnet1Id": {
+            "type": "string",
+            "value": "[variables('routeTableAppSubnet1Id')]"
         },
         "appSubnet2Id": {
             "type": "string",

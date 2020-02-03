@@ -184,6 +184,15 @@
                                 },
                                 "routeTableExternalId": {
                                     "value": "[reference('f5linkedTemplate').outputs.routeTableExternalId.value]"
+                                },
+                                "appSubnet1Name": {
+                                    "value": "[reference('f5linkedTemplate').outputs.appSubnet1Name.value]"
+                                },
+                                "appSubnet1Prefix": {
+                                    "value": "[reference('f5linkedTemplate').outputs.appSubnet1Prefix.value]"
+                                },
+                                "routeTableAppSubnet1Id": {
+                                    "value": "[reference('f5linkedTemplate').outputs.routeTableAppSubnet1Id.value]"
                                 }
                             }
                         }
