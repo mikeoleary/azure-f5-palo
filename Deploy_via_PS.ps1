@@ -7,7 +7,7 @@ param(
 
   [string] [Parameter(Mandatory=$True)] $adminUsername,
   #[string] [Parameter(Mandatory=$True)] $authenticationType,
-  [string] [Parameter(Mandatory=$True)] $adminPasswordOrKey,
+  [string] [Parameter(Mandatory=$True)] $password,
   [string] [Parameter(Mandatory=$True)] $dnsLabel,
   #[string] [Parameter(Mandatory=$True)] $instanceName,
   #[string] [Parameter(Mandatory=$True)] $numberOfExternalIps,
@@ -27,7 +27,7 @@ param(
   #$tagValues = '{"application": "APP", "cost": "COST", "environment": "ENV", "group": "GROUP", "owner": "OWNER"}',
   #[string] [Parameter(Mandatory=$True)] $allowUsageAnalytics,
   [string] [Parameter(Mandatory=$True)] $resourceGroupName,
-  [string] $region = "East US 2",
+  [string] [Parameter(Mandatory=$True)] $region,
   [string] $templateFilePath = "deploy.json"
   #[string] $parametersFilePath = "deploy.parameters.json"
 )
@@ -49,12 +49,12 @@ try {
 # Create Resource Group for ARM Deployment
 New-AzureRmResourceGroup -Name $resourceGroupName -Location "$region" -Force
 
-$adminPasswordOrKeySecure = ConvertTo-SecureString -String $adminPasswordOrKey -AsPlainText -Force
+$adminPasswordOrKeySecure = ConvertTo-SecureString -String $password -AsPlainText -Force
 
 #(ConvertFrom-Json $tagValues).psobject.properties | ForEach -Begin {$tagValues=@{}} -process {$tagValues."$($_.Name)" = $_.Value}
 
 # Create Arm Deployment
-$deployment = New-AzureRmResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath -Verbose -adminUsername $adminUsername -adminPasswordOrKey $adminPasswordOrKeySecure -dnsLabel $dnsLabel
+$deployment = New-AzureRmResourceGroupDeployment -Name $resourceGroupName -ResourceGroupName $resourceGroupName -TemplateFile $templateFilePath -Verbose -adminUsername $adminUsername -password $adminPasswordOrKeySecure -dnsLabel $dnsLabel
 
 # Print Output of Deployment to Console
 $deployment

@@ -8,7 +8,7 @@
             },
             "type": "string"
         },
-        "adminPasswordOrKey": {
+        "password": {
             "metadata": {
                 "description": "Password or SSH public key to login to the Virtual Machine. Note: There are a number of special characters that you should avoid using for F5 product user accounts.  See [K2873](https://support.f5.com/csp/article/K2873) for details. Note: If using key-based authentication, this should be the public key as a string, typically starting with **---- BEGIN SSH2 PUBLIC KEY ----** and ending with **---- END SSH2 PUBLIC KEY ----**."
             },
@@ -58,7 +58,7 @@
                                     "value": "[parameters('adminUserName')]"
                                 },
                                 "adminPasswordOrKey":{
-                                    "value": "[parameters('adminPasswordOrKey')]"
+                                    "value": "[parameters('password')]"
                                     },
                                 "dnsLabel": {
                                     "value": "[parameters('dnsLabel')]"
@@ -81,7 +81,7 @@
                             },
                             "parameters": {
                                 "adminPassword":{
-                                    "value": "[parameters('adminPasswordOrKey')]"
+                                    "value": "[parameters('password')]"
                                 },
                                 "adminUserName": {
                                     "value": "[parameters('adminUserName')]"
@@ -143,7 +143,7 @@
                                     "value": "[parameters('adminUsername')]"
                                 },
                                 "adminPasswordOrKey": {
-                                    "value": "[parameters('adminPasswordOrKey')]"
+                                    "value": "[parameters('password')]"
                                 },
                                 "subnetId": {
                                     "value": "[reference('f5linkedTemplate').outputs.appSubnet1Id.value]"
