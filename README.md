@@ -20,7 +20,7 @@ To deploy via the web interface, click the button below.
 
 ### Verify with URL from web interface
 When the deployment is finished and you have <b>waited about 10 mins for the PaloAlto VM's to complete their bootstrap process</b> you can visit the URL of the application. Click on your Resource Group, then Deployments, then the Deployment you made, and it's Outputs. You should see a screen like below: </br>
-![Image of outputs](images/outputs-gui.gif)
+![Image of outputs](images/outputs-gui.GIF)
 
 ### Deploy via Powershell
 To deploy via Powershell, download the file Deploy_via_Powershell.ps1 and run a command similar to the following:
@@ -28,7 +28,7 @@ To deploy via Powershell, download the file Deploy_via_Powershell.ps1 and run a 
 
 ### Verify with URL from Powershell outputs
 When the deployment is finished and you have <b>waited about 10 mins for the PaloAlto VM's to complete their bootstrap process</b> you can visit the URL of the application. You should see a screen like below: </br>
-![Image of outputs powershell](images/outputs-powershell.gif)
+![Image of outputs powershell](images/outputs-powershell.GIF)
 
 ## High Availability
 This set of templates will automatically configure HA via Azure Load Balancers.
