@@ -1,7 +1,16 @@
 # azure-f5-palo
 Deploys a security stack where PaloAlto firewalls are internet-facing, and F5 BIG-IP's perform application services in a second tier. Uses marketplace (PAYG) images so that license keys or eval keys are not required, but production or long-term use cases can edit the templates as desired to use BYOL licenses and license keys.
 
-## Architecture
+## Contents
+- [Architecture](#Architecture)
+- [Instructions to deploy](#Instructions-to-deploy)
+- [High Availability](#High-Availability)
+- [Notes](#Notes)
+- [Advanced technical details for this demo](#Advanced-technical-details-for-this-demo)
+- [Support](#Support)
+
+## Architecture<br> <br> 
+![Image of Architecture](images/paloalto-bigip-azure.png)
 
 ## Instructions to deploy
 ### Deploy via Web Interface
