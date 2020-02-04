@@ -571,7 +571,7 @@
         "newDataStorageAccountName": "[concat(uniqueString(variables('dnsLabel'), resourceGroup().id, deployment().name), 'data000')]",
         "dataStorageAccountType": "Standard_LRS",
         "deploymentId": "[concat(variables('subscriptionId'), resourceGroup().id, deployment().name, variables('dnsLabel'))]",
-        "customConfig": "[concat('tmsh create net route 10.0.0.0/8 gw ', parameters('vnetAddressPrefix'), variables('intSubnetGWAddress'), '\ntmsh create net route 172.16.0.0/12 gw ', parameters('vnetAddressPrefix'), variables('intSubnetGWAddress'), '\ntmsh create net route 192.168.0.0/16 gw ', parameters('vnetAddressPrefix'), variables('intSubnetGWAddress'))]",
+        "customConfig": "[concat('tmsh create net route 10.0.0.0/8 gw ', variables('intSubnetGWAddress'), '\ntmsh create net route 172.16.0.0/12 gw ', variables('intSubnetGWAddress'), '\ntmsh create net route 192.168.0.0/16 gw ', variables('intSubnetGWAddress'))]",
         "allowUsageAnalytics": {
             "No": {
                 "hashCmd": "echo AllowUsageAnalytics:No",
