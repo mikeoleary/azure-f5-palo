@@ -18,9 +18,17 @@ To deploy via the web interface, click the button below.
 
 [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmikeoleary%2Fazure-f5-palo%2Fmaster%2Fdeploy.json)
 
+### Verify with URL from web interface
+When the deployment is finished and you have <b>waited about 10 mins for the PaloAlto VM's to complete their bootstrap process</b> you can visit the URL of the application. Click on your Resource Group, then Deployments, then the Deployment you made, and it's Outputs. You should see a screen like below: </br>
+![Image of outputs](images/outputs-gui.gif)
+
 ### Deploy via Powershell
 To deploy via Powershell, download the file Deploy_via_Powershell.ps1 and run a command similar to the following:
 `.\Deploy_via_PS.ps1 -adminUsername azureuser -password MY-PASSWORD -dnsLabel SOME-UNIQUE-VALUE -resourceGroupName YOUR-RESOURCE-GROUP -region REGION`
+
+### Verify with URL from Powershell outputs
+When the deployment is finished and you have <b>waited about 10 mins for the PaloAlto VM's to complete their bootstrap process</b> you can visit the URL of the application. You should see a screen like below: </br>
+![Image of outputs powershell](images/outputs-powershell.gif)
 
 ## High Availability
 This set of templates will automatically configure HA via Azure Load Balancers.
