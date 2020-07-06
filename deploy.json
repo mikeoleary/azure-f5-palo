@@ -167,6 +167,12 @@
                             "parameters": {
                                 "resourceName": {
                                     "value": "[concat(parameters('dnsLabel'),'-uami')]"
+                                },
+                                "storageAccountName": {
+                                    "value": "[reference('salinkedTemplate').outputs.storageAccountName.value]"
+                                },
+                                "storageAccountKey": {
+                                    "value": "[reference('salinkedTemplate').outputs.StorageAccountKey.value]"
                                 }
                             }
                         }
