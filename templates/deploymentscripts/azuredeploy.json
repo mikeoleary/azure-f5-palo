@@ -43,7 +43,9 @@
         "networkProfileName": "aci-networkProfile",
         "interfaceConfigName": "eth0",
         "interfaceIpConfig": "ipconfigprofile1",
-        "containerGroupName": "[concat(parameters('dnsLabel'), '-containerGroup')]"
+        "containerGroupName": "[concat(parameters('dnsLabel'), '-containerGroup')]",
+        "containerName": "[concat(parameters('dnsLabel'), '-aci')]",
+        "image": "mcr.microsoft.com/azure-cli"
     },
     "resources": [
         {
@@ -81,24 +83,18 @@
             ],
             "properties": {
                 "containers": [
-//                {
-//                    "name": "[parameters('containerName')]",
-//                    "properties": {
-//                   "image": "[parameters('image')]",
-//                    "ports": [
-//                        {
-//                        "port": "[parameters('port')]",
-//                        "protocol": "Tcp"
-//                        }
-//                    ],
-//                   "resources": {
-//                        "requests": {
-//                        "cpu": "[parameters('cpuCores')]",
-//                        "memoryInGB": "[parameters('memoryInGb')]"
-//                        }
-//                    }
-//                    }
-//                }
+                {
+                    "name": "[variables('containerName')]",
+                    "properties": {
+                   "image": "[variables('image')]",
+                   "resources": {
+                        "requests": {
+                        "cpu": 1,
+                        "memoryInGB": 1
+                        }
+                    }
+                    }
+                }
                 ],
                 "osType": "Linux",
                 "networkProfile": {
