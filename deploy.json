@@ -182,6 +182,9 @@
                                 "contentVersion":"1.0.0.0"
                             },
                             "parameters": {
+                                "dnsLabel": {
+                                    "value": "[parameters('dnsLabel')]"
+                                },
                                 "subnetId": {
                                     "value": "[reference('f5linkedTemplate').outputs.appSubnet2Id.value]"
                                 },

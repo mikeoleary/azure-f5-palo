@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "dnsLabel": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS Label for deployment"
+            }
+        },
         "subnetId": {
             "type": "string",
             "metadata": {
@@ -36,7 +42,8 @@
     "variables":{
         "networkProfileName": "aci-networkProfile",
         "interfaceConfigName": "eth0",
-        "interfaceIpConfig": "ipconfigprofile1"
+        "interfaceIpConfig": "ipconfigprofile1",
+        "containerGroupName": "[concat(parameters('dnsLabel'), '-containerGroup')]"
     },
     "resources": [
         {
@@ -65,6 +72,42 @@
             }
         },
         {
+            "name": "[variables('containerGroupName')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-07-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]"
+            ],
+            "properties": {
+                "containers": [
+//                {
+//                    "name": "[parameters('containerName')]",
+//                    "properties": {
+//                   "image": "[parameters('image')]",
+//                    "ports": [
+//                        {
+//                        "port": "[parameters('port')]",
+//                        "protocol": "Tcp"
+//                        }
+//                    ],
+//                   "resources": {
+//                        "requests": {
+//                        "cpu": "[parameters('cpuCores')]",
+//                        "memoryInGB": "[parameters('memoryInGb')]"
+//                        }
+//                    }
+//                    }
+//                }
+                ],
+                "osType": "Linux",
+                "networkProfile": {
+                    "Id": "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]"
+                },
+                "restartPolicy": "Always"
+            }
+        },
+        {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2018-09-01-preview",
             "name": "[guid(resourceGroup().id)]",
@@ -90,6 +133,9 @@
             },
             "properties": {
                 "forceUpdateTag": 1,
+                "containerSettings": {
+                    "containerGroupName": "[variables('containerGroupName')]"
+                },
                 "storageAccountSettings": {
                     "storageAccountName": "[parameters('storageAccountName')]",
                     "storageAccountKey": "[parameters('storageAccountKey')]"
