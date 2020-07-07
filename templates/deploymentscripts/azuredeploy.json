@@ -19,6 +19,12 @@
             "metadata": {
                 "description": "storageAccountKey"
             }
+        },
+        "userAssignedManagedIdentityId": {
+            "type": "string",
+            "metadata": {
+                "description": "Id of User Assigned Managed Identity with Contributor permissions on RG"
+            }
         }
     },
     "resources": [
@@ -34,7 +40,7 @@
             "identity": {
                 "type": "userAssigned",
                 "userAssignedIdentities": {
-                    "[reference(concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('resourceName')), '2018-11-30', 'Full').Id]": {}
+                    "[parameters('userAssignedManagedIdentityId')]": {}
                 }
             },
             "properties": {

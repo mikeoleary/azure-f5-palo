@@ -21,10 +21,13 @@
             }
         }
     },
+    "variables": {
+        "storageAccountNameUnique": "[concat(parameters('resourceName'), '-uami-' take(uniqueString(resourceGroup().id),5)) ]"
+    },
     "resources": [
         {
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-            "name": "[concat(parameters('resourceName'),take(uniqueString(resourceGroup().id),5)) ]",
+            "name": "[variables('storageAccountNameUnique') ]",
             "apiVersion": "2018-11-30",
             "location": "[resourceGroup().location]"
         },
@@ -33,22 +36,22 @@
             "apiVersion": "2018-09-01-preview",
             "name": "[guid(resourceGroup().id)]",
             "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('resourceName') )]"
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('storageAccountNameUnique') )]"
             ],
             "properties": {
                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-                "principalId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('resourceName') )]"
+                "principalId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('storageAccountNameUnique') )]"
             }
         }
     ],
     "outputs": {
         "identityName": {
             "type": "string",
-            "value": "[reference(concat(parameters('resourceName'),take(uniqueString(resourceGroup().id),5))).Name]"
+            "value": "[reference(variables('storageAccountNameUnique')).Name]"
         },
         "identityId": {
             "type": "string",
-            "value": "[reference(concat(parameters('resourceName'),take(uniqueString(resourceGroup().id),5))).Id]"
+            "value": "[reference(variables('storageAccountNameUnique')).Id]"
         }
     }
 }

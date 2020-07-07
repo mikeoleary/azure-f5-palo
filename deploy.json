@@ -166,7 +166,7 @@
                             },
                             "parameters": {
                                 "resourceName": {
-                                    "value": "[concat(parameters('dnsLabel'),'-uami')]"
+                                    "value": "[parameters('dnsLabel')]"
                                 },
                                 "storageAccountName": {
                                     "value": "[reference('salinkedTemplate').outputs.storageAccountName.value]"
