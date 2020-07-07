@@ -22,7 +22,7 @@
         }
     },
     "variables": {
-        "storageAccountNameUnique": "[concat(parameters('resourceName'), '-uami-' take(uniqueString(resourceGroup().id),5)) ]"
+        "storageAccountNameUnique": "[concat(parameters('resourceName'), '-uami-', take(uniqueString(resourceGroup().id),5)) ]"
     },
     "resources": [
         {
