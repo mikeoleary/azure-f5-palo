@@ -52,7 +52,7 @@
             "identity": {
                 "type": "userAssigned",
                 "userAssignedIdentities": {
-                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('resourceName') )]": {}
+                    "[reference(concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('resourceName')), '2018-11-30', 'Full').Id]": {}
                 }
             },
             "properties": {
