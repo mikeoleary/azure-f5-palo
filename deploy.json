@@ -182,8 +182,8 @@
                                 "contentVersion":"1.0.0.0"
                             },
                             "parameters": {
-                                "resourceName": {
-                                    "value": "[parameters('dnsLabel')]"
+                                "userAssignedManagedIdentityId": {
+                                    "value": "[reference('iamlinkedTemplate').outputs.identityId.value]"
                                 },
                                 "storageAccountName": {
                                     "value": "[reference('salinkedTemplate').outputs.storageAccountName.value]"
