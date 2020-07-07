@@ -23,15 +23,18 @@
     },
     "resources": [
         {
-        "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-        "name": "[parameters('resourceName')]",
-        "apiVersion": "2018-11-30",
-        "location": "[resourceGroup().location]"
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "name": "[parameters('resourceName')]",
+            "apiVersion": "2018-11-30",
+            "location": "[resourceGroup().location]"
         },
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2019-10-01-preview",
             "name": "runPowerShellInline",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('resourceName') )]"
+            ],
             "location": "[resourceGroup().location]",
             "kind": "AzurePowerShell", // or "AzureCLI"
             "identity": {
