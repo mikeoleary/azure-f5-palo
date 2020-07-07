@@ -35,11 +35,11 @@
     "outputs": {
         "identityName": {
             "type": "string",
-            "value": "[reference(variables('resourceNameUnique')).Name]"
+            "value": "[variables('resourceNameUnique')]"
         },
         "identityId": {
             "type": "string",
-            "value": "[reference(variables('resourceNameUnique')).Id]"
+            "value": "[reference(variables('resourceNameUnique')).principalId]"
         }
     }
 }
