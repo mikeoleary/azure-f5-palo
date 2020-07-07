@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceName": {
+            "type": "string",
+            "metadata": {
+                "description": "USER ASSIGNED IDENTITY NAME"
+            }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "storageAccountName"
+            }
+        },
+        "storageAccountKey": {
+            "type": "string",
+            "metadata": {
+                "description": "storageAccountKey"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "name": "runPowerShellInline",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('resourceName') )]"
+            ],
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell", // or "AzureCLI"
+            "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[reference(concat('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('resourceName')), '2018-11-30', 'Full').Id]": {}
+                }
+            },
+            "properties": {
+                "forceUpdateTag": 1,
+                "storageAccountSettings": {
+                    "storageAccountName": "[parameters('storageAccountName')]",
+                    "storageAccountKey": "[parameters('storageAccountKey')]"
+                },
+                "azPowerShellVersion": "3.0",  // or "azCliVersion": "2.0.80"
+                "arguments": "-name \\\"John Dole\\\"",
+                "environmentVariables": [
+                {
+                    "name": "someSecret",
+                    "secureValue": "if this is really a secret, don't put it here... in plain text..."
+                }
+                ],
+                "scriptContent": "
+                param([string] $name)
+                $output = 'Hello {0}' -f $name
+                Write-Output $output
+                $DeploymentScriptOutputs = @{}
+                $DeploymentScriptOutputs['text'] = $output
+                ", // or "primaryScriptUri": "https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/deployment-script/deploymentscript-helloworld.ps1",
+                "supportingScriptUris":[],
+                "timeout": "PT30M",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
+            }
+        }
+    ],
+    "outputs": {
+        "identityName": {
+            "type": "string",
+            "value": "[parameters('resourceName')]"
+        }
+    }
+}
