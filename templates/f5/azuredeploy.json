@@ -751,7 +751,15 @@
                     {
                         "name": "[variables('appSubnet2Name')]",
                         "properties": {
-                            "addressPrefix": "[variables('appSubnet2Prefix')]"
+                            "addressPrefix": "[variables('appSubnet2Prefix')]",
+                            "delegations": [
+                                {
+                                "name": "DelegationService",
+                                "properties": {
+                                    "serviceName": "Microsoft.ContainerInstance/containerGroups"
+                                }
+                                }
+                            ]
                         }
                     },
                     {

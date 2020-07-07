@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "subnetId": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource id of subnet for Azure container instance"
+            }
+        },
         "storageAccountName": {
             "type": "string",
             "metadata": {
@@ -27,8 +33,38 @@
             }
         }
     },
+    "variables":{
+        "networkProfileName": "aci-networkProfile",
+        "interfaceConfigName": "eth0",
+        "interfaceIpConfig": "ipconfigprofile1"
+    },
     "resources": [
-       {
+        {
+            "name": "[variables('networkProfileName')]",
+            "type": "Microsoft.Network/networkProfiles",
+            "apiVersion": "2018-07-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "containerNetworkInterfaceConfigurations": [
+                {
+                    "name": "[variables('interfaceConfigName')]",
+                    "properties": {
+                    "ipConfigurations": [
+                        {
+                        "name": "[variables('interfaceIpConfig')]",
+                        "properties": {
+                            "subnet": {
+                            "id": "[parameters('subnetId')]"
+                            }
+                        }
+                        }
+                    ]
+                    }
+                }
+                ]
+            }
+        },
+        {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2018-09-01-preview",
             "name": "[guid(resourceGroup().id)]",
