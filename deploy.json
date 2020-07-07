@@ -167,6 +167,23 @@
                             "parameters": {
                                 "resourceName": {
                                     "value": "[parameters('dnsLabel')]"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "Microsoft.Resources/deployments",
+                        "apiVersion": "2018-05-01",
+                        "name": "scriptslinkedTemplate",
+                        "properties": {
+                            "mode": "Incremental",
+                            "templateLink": {
+                                "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/deploymentscripts/azuredeploy.json",
+                                "contentVersion":"1.0.0.0"
+                            },
+                            "parameters": {
+                                "resourceName": {
+                                    "value": "[parameters('dnsLabel')]"
                                 },
                                 "storageAccountName": {
                                     "value": "[reference('salinkedTemplate').outputs.storageAccountName.value]"

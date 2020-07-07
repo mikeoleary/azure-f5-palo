@@ -7,27 +7,15 @@
             "metadata": {
                 "description": "USER ASSIGNED IDENTITY NAME"
             }
-        },
-        "storageAccountName": {
-            "type": "string",
-            "metadata": {
-                "description": "storageAccountName"
-            }
-        },
-        "storageAccountKey": {
-            "type": "string",
-            "metadata": {
-                "description": "storageAccountKey"
-            }
         }
     },
     "variables": {
-        "storageAccountNameUnique": "[concat(parameters('resourceName'), '-uami-', take(uniqueString(resourceGroup().id),5)) ]"
+        "resourceNameUnique": "[concat(parameters('resourceName'), '-uami-', take(uniqueString(resourceGroup().id),5)) ]"
     },
     "resources": [
         {
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-            "name": "[variables('storageAccountNameUnique') ]",
+            "name": "[variables('resourceNameUnique') ]",
             "apiVersion": "2018-11-30",
             "location": "[resourceGroup().location]"
         },
@@ -36,22 +24,22 @@
             "apiVersion": "2018-09-01-preview",
             "name": "[guid(resourceGroup().id)]",
             "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('storageAccountNameUnique') )]"
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('resourceNameUnique') )]"
             ],
             "properties": {
                 "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
-                "principalId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('storageAccountNameUnique') )]"
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('resourceNameUnique') )).principalId]"
             }
         }
     ],
     "outputs": {
         "identityName": {
             "type": "string",
-            "value": "[reference(variables('storageAccountNameUnique')).Name]"
+            "value": "[reference(variables('resourceNameUnique')).Name]"
         },
         "identityId": {
             "type": "string",
-            "value": "[reference(variables('storageAccountNameUnique')).Id]"
+            "value": "[reference(variables('resourceNameUnique')).Id]"
         }
     }
 }
