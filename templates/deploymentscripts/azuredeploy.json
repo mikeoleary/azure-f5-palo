@@ -45,7 +45,7 @@
         "interfaceIpConfig": "ipconfigprofile1",
         "containerGroupName": "[concat(parameters('dnsLabel'), '-containerGroup')]",
         "containerName": "[concat(parameters('dnsLabel'), '-aci')]",
-        "image": "mcr.microsoft.com/azure-cli"
+        "image": "mcr.microsoft.com/azuredeploymentscripts-powershell"
     },
     "resources": [
         {
