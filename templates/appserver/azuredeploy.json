@@ -138,5 +138,9 @@
     }
   ],
   "outputs": {
+    "appServerPublicIP": {
+      "type": "string",
+      "value": "[reference(variables('publicIPAddressName')).publicIPAddress]"
+      }
   }
 }

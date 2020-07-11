@@ -8,12 +8,6 @@
                 "description": "DNS Label for deployment"
             }
         },
-        "subnetId": {
-            "type": "string",
-            "metadata": {
-                "description": "Resource id of subnet for Azure container instance"
-            }
-        },
         "storageAccountName": {
             "type": "string",
             "metadata": {
@@ -37,41 +31,18 @@
             "metadata": {
                 "description": "Name of User Assigned Managed Identity with Contributor permissions on RG"
             }
+        },
+        "appServerPublicIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Public IP address of app server deployment"
+            }
         }
     },
     "variables":{
-        "networkProfileName": "aci-networkProfile",
-        "interfaceConfigName": "eth0",
-        "interfaceIpConfig": "ipconfigprofile1",
-        "containerGroupName": "[concat(parameters('dnsLabel'), '-containerGroup')]",
-        "image": "mcr.microsoft.com/azuredeploymentscripts-powershell:az2.7"
-    },
-    "resources": [
-        {
-            "name": "[variables('networkProfileName')]",
-            "type": "Microsoft.Network/networkProfiles",
-            "apiVersion": "2018-07-01",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "containerNetworkInterfaceConfigurations": [
-                {
-                    "name": "[variables('interfaceConfigName')]",
-                    "properties": {
-                    "ipConfigurations": [
-                        {
-                        "name": "[variables('interfaceIpConfig')]",
-                        "properties": {
-                            "subnet": {
-                            "id": "[parameters('subnetId')]"
-                            }
-                        }
-                        }
-                    ]
-                    }
-                }
-                ]
-            }
+        "containerGroupName": "[concat(parameters('dnsLabel'), '-containerGroup')]"
         },
+    "resources": [
         {
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "2018-09-01-preview",
@@ -106,16 +77,28 @@
                     "storageAccountKey": "[parameters('storageAccountKey')]"
                 },
                 "azPowerShellVersion": "3.0",  // or "azCliVersion": "2.0.80"
-                "arguments": "-name \\\"John Dole\\\"",
-                "environmentVariables": [
-                {
-                    "name": "someSecret",
-                    "secureValue": "if this is really a secret, don't put it here... in plain text..."
-                }
-                ],
+                "arguments": "[concat('-url ', parameters('appServerPublicIP'))]",
                 "scriptContent": "
-                param([string] $name)
-                $output = 'Hello {0}' -f $name
+                param(
+                    [string] $url
+                    )
+                #every 15 secs for 5 mins, check if app server is up yet
+                $i=0
+                while ($i -lt 20) {
+                    $response = Invoke-WebRequest -URI $url
+                    if ($response.StatusCode -eq '200') {
+                        $success = $true
+                        break;
+                    }
+                    else {
+                        $i++
+                        sleep -Seconds 15
+                    }
+                }
+                if (!($success)) {
+                    throw $url+' is not available, status code is '+ $response.StatusCode
+                    }
+                $output = $response.StatusCode
                 Write-Output $output
                 $DeploymentScriptOutputs = @{}
                 $DeploymentScriptOutputs['text'] = $output

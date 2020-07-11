@@ -185,9 +185,6 @@
                                 "dnsLabel": {
                                     "value": "[parameters('dnsLabel')]"
                                 },
-                                "subnetId": {
-                                    "value": "[reference('f5linkedTemplate').outputs.appSubnet2Id.value]"
-                                },
                                 "userAssignedManagedIdentityId": {
                                     "value": "[reference('iamlinkedTemplate').outputs.identityId.value]"
                                 },
@@ -199,6 +196,51 @@
                                 },
                                 "storageAccountKey": {
                                     "value": "[reference('salinkedTemplate').outputs.StorageAccountKey.value]"
+                                },
+                                "appServerPublicIP": {
+                                    "value": "[reference('applinkedTemplate').outputs.appServerPublicIP.value]"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "Microsoft.Resources/deployments",
+                        "apiVersion": "2018-05-01",
+                        "name": "routeslinkedTemplate",
+                        "dependsOn": [
+                            "palinkedTemplate",
+                            "scriptslinkedTemplate"
+                        ],
+                        "properties": {
+                            "mode": "Incremental",
+                            "templateLink": {
+                                "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/routes/azureDeploy.json",
+                                "contentVersion":"1.0.0.0"
+                            },
+                            "parameters": {
+                                "virtualnetworkName": {
+                                    "value": "[reference('f5linkedTemplate').outputs.virtualnetworkName.value]"
+                                },
+                                "extSubnetName": {
+                                    "value": "[reference('f5linkedTemplate').outputs.extSubnetName.value]"
+                                },
+                                "extSubnetPrefix": {
+                                    "value": "[reference('f5linkedTemplate').outputs.extSubnetPrefix.value]"
+                                },
+                                "extNsgId": {
+                                    "value": "[reference('f5linkedTemplate').outputs.extNsgId.value]"
+                                },
+                                "routeTableExternalId": {
+                                    "value": "[reference('f5linkedTemplate').outputs.routeTableExternalId.value]"
+                                },
+                                "appSubnet1Name": {
+                                    "value": "[reference('f5linkedTemplate').outputs.appSubnet1Name.value]"
+                                },
+                                "appSubnet1Prefix": {
+                                    "value": "[reference('f5linkedTemplate').outputs.appSubnet1Prefix.value]"
+                                },
+                                "routeTableAppSubnet1Id": {
+                                    "value": "[reference('f5linkedTemplate').outputs.routeTableAppSubnet1Id.value]"
                                 }
                             }
                         }
