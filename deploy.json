@@ -19,6 +19,12 @@
                 "description": "Unique DNS Name for the Public IP address used to access the Virtual Machine."
             },
             "type": "string"
+        },
+        "restrictedSrcAddress": {
+            "metadata": {
+                "description": "This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation. You should use your own IP address. By using * you will leave this management console open to the Internet, which is not recommended."
+            },
+            "type": "string"
         }
     },
     "variables": {},
@@ -65,7 +71,10 @@
                                 },
                                 "declarationUrl": {
                                     "value": "https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/f5/baseline.json"
-                                }                                
+                                },
+                                "restrictedSrcAddress": {
+                                    "value": "[parameters('restrictedSrcAddress')]"     
+                                }                        
                             }
                         }
                     },
