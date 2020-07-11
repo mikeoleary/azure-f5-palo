@@ -44,7 +44,6 @@
         "interfaceConfigName": "eth0",
         "interfaceIpConfig": "ipconfigprofile1",
         "containerGroupName": "[concat(parameters('dnsLabel'), '-containerGroup')]",
-        "containerName": "[concat(parameters('dnsLabel'), '-aci')]",
         "image": "mcr.microsoft.com/azuredeploymentscripts-powershell:az2.7"
     },
     "resources": [
@@ -71,36 +70,6 @@
                     }
                 }
                 ]
-            }
-        },
-        {
-            "name": "[variables('containerGroupName')]",
-            "type": "Microsoft.ContainerInstance/containerGroups",
-            "apiVersion": "2018-07-01",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]"
-            ],
-            "properties": {
-                "containers": [
-                {
-                    "name": "[variables('containerName')]",
-                    "properties": {
-                   "image": "[variables('image')]",
-                   "resources": {
-                        "requests": {
-                        "cpu": 1,
-                        "memoryInGB": 1
-                        }
-                    }
-                    }
-                }
-                ],
-                "osType": "Linux",
-                "networkProfile": {
-                    "Id": "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]"
-                },
-                "restartPolicy": "Always"
             }
         },
         {
