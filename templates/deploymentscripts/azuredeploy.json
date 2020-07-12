@@ -85,9 +85,14 @@
                 #every 15 secs for 5 mins, check if app server is up yet
                 $i=0
                 while ($i -lt 20) {
-                    $response = Invoke-WebRequest -URI $url
-                    if ($response.StatusCode -eq '200') {
-                        $success = $true
+                    try {
+                        $response = Invoke-WebRequest -URI $url -ErrorAction Stop
+                        $StatusCode = $response.StatusCode 
+                    }
+                    catch {
+                        $StatusCode = $_.Exception.Response.StatusCode.value__
+                    }
+                    if ($StatusCode -eq '200') {
                         break;
                     }
                     else {
@@ -95,10 +100,10 @@
                         sleep -Seconds 15
                     }
                 }
-                if (!($success)) {
-                    throw $url+' is not available, status code is '+ $response.StatusCode
+                if (!($StatusCode -eq '200')) {
+                    throw $url+' is not available, status code is '+ $StatusCode
                     }
-                $output = $response.StatusCode
+                $output = $StatusCode
                 Write-Output $output
                 $DeploymentScriptOutputs = @{}
                 $DeploymentScriptOutputs['text'] = $output
