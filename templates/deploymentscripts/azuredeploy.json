@@ -77,7 +77,7 @@
                     "storageAccountKey": "[parameters('storageAccountKey')]"
                 },
                 "azPowerShellVersion": "3.0",  // or "azCliVersion": "2.0.80"
-                "arguments": "[concat('-url ', parameters('appServerPublicIP'))]",
+                "arguments": "[concat('-url http://', parameters('appServerPublicIP'))]",
                 "scriptContent": "
                 param(
                     [string] $url
@@ -86,7 +86,7 @@
                 $i=0
                 while ($i -lt 20) {
                     try {
-                        $response = Invoke-WebRequest -URI $url -ErrorAction Stop
+                        $response = Invoke-WebRequest -URI $url -UseBasicParsing
                         $StatusCode = $response.StatusCode 
                     }
                     catch {
