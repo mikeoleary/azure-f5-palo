@@ -99,7 +99,7 @@
                     }
                     else {
                         $i++
-                        Start-Sleep 15
+                        Start-Sleep 30
                     }
                 }
                 if (!($StatusCode -eq '200')) {
