@@ -84,8 +84,10 @@
                     )
                 #every 15 secs for 5 mins, check if app server is up yet
                 $i=0
+                write-output 'setting i to 0'
                 while ($i -lt 20) {
                     try {
+                        write-output 'attempt number $i'
                         $response = Invoke-WebRequest -URI $url -UseBasicParsing
                         $StatusCode = $response.StatusCode 
                     }
