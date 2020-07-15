@@ -87,7 +87,7 @@
                 write-output 'setting i to 0'
                 while ($i -lt 20) {
                     try {
-                        write-output 'attempt number $i'
+                        write-output $('attempt number'+$i)
                         $response = Invoke-WebRequest -URI $url -UseBasicParsing
                         $StatusCode = $response.StatusCode 
                     }
@@ -103,7 +103,7 @@
                     }
                 }
                 if (!($StatusCode -eq '200')) {
-                    throw $url+' is not available, status code is '+ $StatusCode
+                    throw $url+' is not available, status code is '+$StatusCode
                     }
                 $output = $StatusCode
                 Write-Output $output
