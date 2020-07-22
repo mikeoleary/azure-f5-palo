@@ -1,8 +1,8 @@
 param(
     [string] $srcBlob,
-	[string] $destStorageAcctName
+	[string] $destStorageAcctName,
     [string] $destFileShare,
-    [string] $publicIP
+    [string] $publicIP,
 	[string] $StorageAccountKey
     )
 

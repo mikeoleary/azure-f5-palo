@@ -48,6 +48,9 @@
                                 },
                                 "userAssignedManagedIdentityName": {
                                     "value": "[reference('iamlinkedTemplate').outputs.identityName.value]"
+                                },
+                                "userAssignedManagedIdentityId": {
+                                    "value": "[reference('iamlinkedTemplate').outputs.identityId.value]"
                                 }
                             }
                         }
