@@ -3,6 +3,7 @@ param(
 	[string] $destStorageAcctName
     [string] $destFileShare,
     [string] $publicIP
+	[string] $StorageAccountKey
     )
 
 apt-get update
@@ -27,7 +28,7 @@ foreach ($file in $filesToUpdate) {
 }
 
 #create a SAS Token to upload to new Storage Account
-$StorageContext = New-AzStorageContext -StorageAccountName $destStorageAcctName -StorageAccountKey "HTaHqcnBtb2zUdkJ+lWWXjJo+JWVpZ3ja9pGY6QViYBAuCNAIuO7eBuKnUHvgeQOJ+ohUOe/rkVZ/Qs1QHJUMw=="
+$StorageContext = New-AzStorageContext -StorageAccountName $destStorageAcctName -StorageAccountKey $StorageAccountKey
 $SAStoken = New-AzStorageAccountSASToken -Service File -ResourceType Service,Container,Object -Permission racwdlup -Context $StorageContext -ExpiryTime (Get-Date).AddHours(+1)
 
 azcopy cp "/var/tmp/paloaltobootstrapfiles" "$destFileShare$SAStoken" --recursive=true

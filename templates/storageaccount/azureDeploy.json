@@ -100,7 +100,7 @@
                     "storageAccountKey": "[listKeys(variables('storageAccountid') ,'2015-05-01-preview').key1]"
                 },
                 "azPowerShellVersion": "3.0",  // or "azCliVersion": "2.0.80"
-                "arguments": "[concat('-srcBlob ', variables('srcBlob'), ' -destStorageAcctName ', variables('storageAccountName'), ' -destFileShare ', variables('sourceStorageURL'),  ' -publicIP ', reference(variables('lbpublicIPId')).ipAddress )]",
+                "arguments": "[concat('-srcBlob ', variables('srcBlob'), ' -destStorageAcctName ', variables('storageAccountName'), ' -destFileShare ', variables('sourceStorageURL'),  ' -publicIP ', reference(variables('lbpublicIPId')).ipAddress, ' -StorageAccountKey ', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]",
                 "primaryScriptUri": "[variables('primaryScriptUri')]",
                 "supportingScriptUris":[],
                 "timeout": "PT30M",
