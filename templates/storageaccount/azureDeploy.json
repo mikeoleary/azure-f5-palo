@@ -27,6 +27,12 @@
             "metadata": {
                 "description": "Name of User Assigned Managed Identity with Contributor permissions on RG"
             }
+        },
+        "userAssignedManagedIdentityId": {
+            "type": "string",
+            "metadata": {
+                "description": "Id of User Assigned Managed Identity with Contributor permissions on RG"
+            }
         }
     },
     "variables": {
@@ -41,6 +47,15 @@
 
     },
     "resources": [
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2018-09-01-preview",
+            "name": "[guid(resourceGroup().id)]",
+            "properties": {
+                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+                "principalId": "[parameters('userAssignedManagedIdentityId')]"
+            }
+        },
         {
             "apiVersion": "2018-10-01",
             "type": "Microsoft.Network/publicIPAddresses",
@@ -80,7 +95,8 @@
             "apiVersion": "2019-10-01-preview",
             "name": "runPowerShellInline",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]",
+                "[guid(resourceGroup().id)]"
             ],
             "location": "[resourceGroup().location]",
             "kind": "AzurePowerShell", // or "AzureCLI"
