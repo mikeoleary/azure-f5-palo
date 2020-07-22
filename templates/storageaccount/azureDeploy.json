@@ -8,10 +8,10 @@
                 "description": "Name of the storage account to create"
             }
         },
-        "ContainerName": {
+        "fileShareName": {
             "type": "string",
             "metadata": {
-                "description": "Name of the container in the storage account to store files"
+                "description": "Name of the fileshare in the storage account to store files"
             },
             "defaultValue": "bootstrapfiles"
         },
@@ -21,16 +21,24 @@
                 "description": "URL of Azure Storage Account and blob container with orginal files to copy"
             },
             "defaultValue": "https://molearyfiles.blob.core.windows.net/paloaltobootstrapfiles"
+        },
+        "userAssignedManagedIdentityName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of User Assigned Managed Identity with Contributor permissions on RG"
+            }
         }
     },
     "variables": {
         "storageAccountName": "[concat(parameters('StorageAccountName'),take(uniqueString(resourceGroup().id),5))]",
         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]",
         "sourceStorageURL": "[parameters('sourceStorageURL')]",
-        "containerImageName": "samcogan/azcopy",
         "lbpublicIPName": "loadBalancerPublicIP",
         "lbpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('lbpublicIPName'))]",
-        "singleQuote": "'"
+        "srcBlob": "https://molearyfiles.blob.core.windows.net/paloaltobootstrapfiles",
+        "primaryScriptUri": "https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/storageaccount/deploymentScriptContent.ps1",
+        "containerGroupName": "[concat(parameters('StorageAccountName'), '-containerGroup')]"
+
     },
     "resources": [
         {
@@ -62,41 +70,43 @@
         {
             "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
             "apiVersion": "2019-04-01",
-            "name": "[concat(variables('storageAccountName'), '/default/', parameters('ContainerName'))]",
+            "name": "[concat(variables('storageAccountName'), '/default/', parameters('fileShareName'))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
             ]
         },
         {
-            "type": "Microsoft.ContainerInstance/containerGroups",
-            "apiVersion": "2017-10-01-preview",
-            "name": "[concat(variables('StorageAccountName'),'-aci')]",
-            "location": "[resourceGroup().location]",
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "name": "runPowerShellInline",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]",
+                "[concat(variables('storageAccountName'), '/default/', parameters('fileShareName'))]"
             ],
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell", // or "AzureCLI"
+            "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('userAssignedManagedIdentityName'))]": {}
+                }
+            },
             "properties": {
-                "containers": [
-                    {
-                        "name": "[concat(variables('StorageAccountName'),'-aci')]",
-                        "properties": {
-                            "command": [
-                                "/bin/bash",
-                                "-c",
-                                "[concat('azcopy --source ', variables('sourceStorageURL'),' --destination /var/tmp --recursive ; ','sed -i ', variables('singleQuote'), 's/PUBLIC_IP/', reference(variables('lbpublicIPId')).ipAddress,'/g', variables('singleQuote'), ' /var/tmp/pavm1/config/bootstrap.xml /var/tmp/pavm2/config/bootstrap.xml ; ', 'azcopy --source /var/tmp* --destination ', concat('https://',variables('storageAccountName'),'.file.core.windows.net/',parameters('ContainerName')),' --dest-key ', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1,' --recursive --quiet')]"
-                            ],
-                            "image": "[variables('containerImageName')]",
-                            "resources": {
-                                "requests": {
-                                    "cpu": 1,
-                                    "memoryInGB": 1
-                                }
-                            }
-                        }
-                    }
-                ],
-                "osType": "Linux",
-                "restartPolicy": "Always"
+                "forceUpdateTag": 1,
+                "containerSettings": {
+                    "containerGroupName": "[variables('containerGroupName')]"
+                },
+                "storageAccountSettings": {
+                    "storageAccountName": "[variables('storageAccountName')]",
+                    "storageAccountKey": "[listKeys(variables('storageAccountid') ,'2015-05-01-preview').key1]"
+                },
+                "azPowerShellVersion": "3.0",  // or "azCliVersion": "2.0.80"
+                "arguments": "[concat('-srcBlob ', variables('srcBlob'), ' -destStorageAcctName ', variables('storageAccountName'), ' -destFileShare ', variables('sourceStorageURL'),  ' -publicIP ', reference(variables('lbpublicIPId')).ipAddress )]",
+                "primaryScriptUri": "[variables('primaryScriptUri')]",
+                "supportingScriptUris":[],
+                "timeout": "PT30M",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
             }
         }
     ],
