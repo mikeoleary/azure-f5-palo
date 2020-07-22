@@ -80,7 +80,8 @@
             "apiVersion": "2019-10-01-preview",
             "name": "runPowerShellInline",
             "dependsOn": [
-                "[guid(resourceGroup().id)]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]",
+                "[concat(variables('storageAccountName'), '/default/', parameters('fileShareName'))]"
             ],
             "location": "[resourceGroup().location]",
             "kind": "AzurePowerShell", // or "AzureCLI"
