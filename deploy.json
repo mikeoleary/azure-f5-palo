@@ -45,6 +45,9 @@
                                 },
                                 "sourceStorageURL": {
                                     "value": "https://molearyfiles.blob.core.windows.net/paloaltobootstrapfiles"
+                                },
+                                "userAssignedManagedIdentityName": {
+                                    "value": "[reference('iamlinkedTemplate').outputs.identityName.value]"
                                 }
                             }
                         }
