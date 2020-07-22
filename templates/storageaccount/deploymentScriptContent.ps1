@@ -31,4 +31,4 @@ foreach ($file in $filesToUpdate) {
 $StorageContext = New-AzStorageContext -StorageAccountName $destStorageAcctName -StorageAccountKey $StorageAccountKey
 $SAStoken = New-AzStorageAccountSASToken -Service File -ResourceType Service,Container,Object -Permission racwdlup -Context $StorageContext -ExpiryTime (Get-Date).AddHours(+1)
 
-azcopy cp "/var/tmp/paloaltobootstrapfiles" "$destFileShare$SAStoken" --recursive=true
+azcopy cp "/var/tmp/paloaltobootstrapfiles/*" "$destFileShare$SAStoken" --recursive=true

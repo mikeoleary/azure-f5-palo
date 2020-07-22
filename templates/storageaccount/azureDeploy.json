@@ -42,6 +42,7 @@
         "lbpublicIPName": "loadBalancerPublicIP",
         "lbpublicIPId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('lbpublicIPName'))]",
         "srcBlob": "https://molearyfiles.blob.core.windows.net/paloaltobootstrapfiles",
+        "destFileShare": "[concat('https://', variables('storageAccountName'), '.file.core.windows.net/', parameters('fileShareName'))]",
         "primaryScriptUri": "https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/storageaccount/deploymentScriptContent.ps1",
         "containerGroupName": "[concat(parameters('StorageAccountName'), '-containerGroup')]"
 
@@ -93,7 +94,7 @@
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2019-10-01-preview",
-            "name": "runPowerShellInline",
+            "name": "runPowerShellInline-copyFileToStorageAcct",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]",
                 "[guid(resourceGroup().id)]"
@@ -116,7 +117,7 @@
                     "storageAccountKey": "[listKeys(variables('storageAccountid') ,'2015-05-01-preview').key1]"
                 },
                 "azPowerShellVersion": "3.0",  // or "azCliVersion": "2.0.80"
-                "arguments": "[concat('-srcBlob ', variables('srcBlob'), ' -destStorageAcctName ', variables('storageAccountName'), ' -destFileShare ', variables('sourceStorageURL'),  ' -publicIP ', reference(variables('lbpublicIPId')).ipAddress, ' -StorageAccountKey ', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]",
+                "arguments": "[concat('-srcBlob ', variables('srcBlob'), ' -destStorageAcctName ', variables('storageAccountName'), ' -destFileShare ', variables('destFileShare'),  ' -publicIP ', reference(variables('lbpublicIPId')).ipAddress, ' -StorageAccountKey ', listKeys(variables('storageAccountid'),'2015-05-01-preview').key1)]",
                 "primaryScriptUri": "[variables('primaryScriptUri')]",
                 "supportingScriptUris":[],
                 "timeout": "PT30M",
