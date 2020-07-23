@@ -32,7 +32,7 @@
                     {
                         "type": "Microsoft.Resources/deployments",
                         "apiVersion": "2018-05-01",
-                        "name": "salinkedTemplate",
+                        "name": "stgAcctLinkedTemplate",
                         "dependsOn": [
                             "appLinkedTemplate"
                             ],
@@ -50,10 +50,10 @@
                                     "value": "https://molearyfiles.blob.core.windows.net/paloaltobootstrapfiles"
                                 },
                                 "userAssignedManagedIdentityName": {
-                                    "value": "[reference('iamlinkedTemplate').outputs.identityName.value]"
+                                    "value": "[reference('iamLinkedTemplate').outputs.identityName.value]"
                                 },
                                 "userAssignedManagedIdentityId": {
-                                    "value": "[reference('iamlinkedTemplate').outputs.identityId.value]"
+                                    "value": "[reference('iamLinkedTemplate').outputs.identityId.value]"
                                 }
                             }
                         }
@@ -61,7 +61,7 @@
                     {
                         "type": "Microsoft.Resources/deployments",
                         "apiVersion": "2018-05-01",
-                        "name": "f5linkedTemplate",
+                        "name": "f5LinkedTemplate",
                         "properties": {
                             "mode": "Incremental",
                             "templateLink": {
@@ -90,7 +90,7 @@
                     {
                         "type": "Microsoft.Resources/deployments",
                         "apiVersion": "2018-05-01",
-                        "name": "palinkedTemplate",
+                        "name": "paLinkedTemplate",
                         "properties": {
                             "mode": "Incremental",
                             "templateLink": {
@@ -123,25 +123,25 @@
                                     "value": "bundle2"
                                 },
                                 "subnet0id" : {
-                                    "value": "[reference('f5linkedTemplate').outputs.mgmtSubnetId.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.mgmtSubnetId.value]"
                                 },
                                 "subnet1id" : {
-                                    "value": "[reference('f5linkedTemplate').outputs.untrustSubnetId.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.untrustSubnetId.value]"
                                 },
                                 "subnet2id" : {
-                                    "value": "[reference('f5linkedTemplate').outputs.trustSubnetId.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.trustSubnetId.value]"
                                 },
                                 "subnet3id" : {
-                                    "value": "[reference('f5linkedTemplate').outputs.haSubnetId.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.haSubnetId.value]"
                                 },
                                 "storageAccountName" : {
-                                    "value": "[reference('salinkedTemplate').outputs.storageAccountName.value]"
+                                    "value": "[reference('stgAcctLinkedTemplate').outputs.storageAccountName.value]"
                                 },
                                 "StorageAccountKey" : {
-                                    "value": "[reference('salinkedTemplate').outputs.StorageAccountKey.value]"
+                                    "value": "[reference('stgAcctLinkedTemplate').outputs.StorageAccountKey.value]"
                                 },
                                 "lbpublicIPId": {
-                                    "value": "[reference('salinkedTemplate').outputs.lbpublicIPId.value]"
+                                    "value": "[reference('stgAcctLinkedTemplate').outputs.lbpublicIPId.value]"
                                 }
                             }
                         }
@@ -149,7 +149,7 @@
                     {
                         "type": "Microsoft.Resources/deployments",
                         "apiVersion": "2018-05-01",
-                        "name": "applinkedTemplate",
+                        "name": "appLinkedTemplate",
                         "properties": {
                             "mode": "Incremental",
                             "templateLink": {
@@ -164,10 +164,10 @@
                                     "value": "[parameters('password')]"
                                 },
                                 "subnetId": {
-                                    "value": "[reference('f5linkedTemplate').outputs.appSubnet1Id.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.appSubnet1Id.value]"
                                 },
                                 "privateIPAddress": {
-                                    "value": "[reference('f5linkedTemplate').outputs.appServer1IP.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.appServer1IP.value]"
                                 }
                             }
                         }
@@ -175,7 +175,7 @@
                     {
                         "type": "Microsoft.Resources/deployments",
                         "apiVersion": "2018-05-01",
-                        "name": "iamlinkedTemplate",
+                        "name": "iamLinkedTemplate",
                         "properties": {
                             "mode": "Incremental",
                             "templateLink": {
@@ -192,11 +192,11 @@
                     {
                         "type": "Microsoft.Resources/deployments",
                         "apiVersion": "2018-05-01",
-                        "name": "scriptslinkedTemplate",
+                        "name": "postDeployCheckLinkedTemplate",
                         "properties": {
                             "mode": "Incremental",
                             "templateLink": {
-                                "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/deploymentscripts/azuredeploy.json",
+                                "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/postDeployCheck/azuredeploy.json",
                                 "contentVersion":"1.0.0.0"
                             },
                             "parameters": {
@@ -204,19 +204,19 @@
                                     "value": "[parameters('dnsLabel')]"
                                 },
                                 "userAssignedManagedIdentityId": {
-                                    "value": "[reference('iamlinkedTemplate').outputs.identityId.value]"
+                                    "value": "[reference('iamLinkedTemplate').outputs.identityId.value]"
                                 },
                                 "userAssignedManagedIdentityName": {
-                                    "value": "[reference('iamlinkedTemplate').outputs.identityName.value]"
+                                    "value": "[reference('iamLinkedTemplate').outputs.identityName.value]"
                                 },
                                 "storageAccountName": {
-                                    "value": "[reference('salinkedTemplate').outputs.storageAccountName.value]"
+                                    "value": "[reference('stgAcctLinkedTemplate').outputs.storageAccountName.value]"
                                 },
                                 "storageAccountKey": {
-                                    "value": "[reference('salinkedTemplate').outputs.StorageAccountKey.value]"
+                                    "value": "[reference('stgAcctLinkedTemplate').outputs.StorageAccountKey.value]"
                                 },
                                 "appServerPublicIP": {
-                                    "value": "[reference('applinkedTemplate').outputs.appServerPublicIP.value]"
+                                    "value": "[reference('appLinkedTemplate').outputs.appServerPublicIP.value]"
                                 }
                             }
                         }
@@ -224,10 +224,10 @@
                     {
                         "type": "Microsoft.Resources/deployments",
                         "apiVersion": "2018-05-01",
-                        "name": "routeslinkedTemplate",
+                        "name": "routesLinkedTemplate",
                         "dependsOn": [
-                            "palinkedTemplate",
-                            "scriptslinkedTemplate"
+                            "paLinkedTemplate",
+                            "postDeployCheckLinkedTemplate"
                         ],
                         "properties": {
                             "mode": "Incremental",
@@ -237,28 +237,28 @@
                             },
                             "parameters": {
                                 "virtualnetworkName": {
-                                    "value": "[reference('f5linkedTemplate').outputs.virtualnetworkName.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.virtualnetworkName.value]"
                                 },
                                 "extSubnetName": {
-                                    "value": "[reference('f5linkedTemplate').outputs.extSubnetName.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.extSubnetName.value]"
                                 },
                                 "extSubnetPrefix": {
-                                    "value": "[reference('f5linkedTemplate').outputs.extSubnetPrefix.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.extSubnetPrefix.value]"
                                 },
                                 "extNsgId": {
-                                    "value": "[reference('f5linkedTemplate').outputs.extNsgId.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.extNsgId.value]"
                                 },
                                 "routeTableExternalId": {
-                                    "value": "[reference('f5linkedTemplate').outputs.routeTableExternalId.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.routeTableExternalId.value]"
                                 },
                                 "appSubnet1Name": {
-                                    "value": "[reference('f5linkedTemplate').outputs.appSubnet1Name.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.appSubnet1Name.value]"
                                 },
                                 "appSubnet1Prefix": {
-                                    "value": "[reference('f5linkedTemplate').outputs.appSubnet1Prefix.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.appSubnet1Prefix.value]"
                                 },
                                 "routeTableAppSubnet1Id": {
-                                    "value": "[reference('f5linkedTemplate').outputs.routeTableAppSubnet1Id.value]"
+                                    "value": "[reference('f5LinkedTemplate').outputs.routeTableAppSubnet1Id.value]"
                                 }
                             }
                         }
@@ -267,23 +267,23 @@
     "outputs": {
         "appUrl": {
             "type": "string",
-            "value": "[reference('salinkedTemplate').outputs.appUrl.value]"
+            "value": "[reference('stgAcctLinkedTemplate').outputs.appUrl.value]"
             },      
         "fw1mgmtIP": {
             "type": "string",
-            "value": "[reference('palinkedTemplate').outputs.fw1mgmtIP.value]"
+            "value": "[reference('paLinkedTemplate').outputs.fw1mgmtIP.value]"
             },
         "fw2mgmtIP": {
             "type": "string",
-            "value": "[reference('palinkedTemplate').outputs.fw2mgmtIP.value]"
+            "value": "[reference('paLinkedTemplate').outputs.fw2mgmtIP.value]"
             },
         "bigip1mgmtIP": {
             "type": "string",
-            "value": "[reference('f5linkedTemplate').outputs.bigip1mgmtIP.value]"
+            "value": "[reference('f5LinkedTemplate').outputs.bigip1mgmtIP.value]"
         },
         "bigip2mgmtIP": {
             "type": "string",
-            "value": "[reference('f5linkedTemplate').outputs.bigip2mgmtIP.value]"
+            "value": "[reference('f5LinkedTemplate').outputs.bigip2mgmtIP.value]"
         }
     }
 }
