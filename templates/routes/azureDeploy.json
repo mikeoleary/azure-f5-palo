@@ -72,6 +72,9 @@
                 {
             "name": "[concat(parameters('virtualNetworkName'), '/', parameters('appSubnet1Name'))]",
             "type": "Microsoft.Network/virtualNetworks/subnets",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'), '/subnets/', parameters('extSubnetName'))]"
+            ],
             "apiVersion": "[variables('networkApiVersion')]",
             "properties": {
                 "addressPrefix": "[parameters('appSubnet1Prefix')]",
