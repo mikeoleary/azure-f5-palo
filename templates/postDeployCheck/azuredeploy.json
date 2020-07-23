@@ -40,7 +40,8 @@
         }
     },
     "variables":{
-        "containerGroupName": "[concat(parameters('dnsLabel'), '-containerGroup')]"
+        "containerGroupName": "[concat(parameters('dnsLabel'), '-containerGroup')]",
+        "primaryScriptUri": "https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/postDeployCheck/deploymentScriptContent.ps1"
         },
     "resources": [
         {
@@ -78,38 +79,7 @@
                 },
                 "azPowerShellVersion": "3.0",  // or "azCliVersion": "2.0.80"
                 "arguments": "[concat('-url http://', parameters('appServerPublicIP'))]",
-                "scriptContent": "
-                param(
-                    [string] $url
-                    )
-                #every 30 secs for 10 mins, check if app server is up yet
-                $i=0
-                write-output 'setting i to 0'
-                while ($i -lt 20) {
-                    try {
-                        write-output $('attempt number'+$i)
-                        $response = Invoke-WebRequest -URI $url -UseBasicParsing
-                        $StatusCode = $response.StatusCode 
-                    }
-                    catch {
-                        $StatusCode = $_.Exception.Response.StatusCode.value__
-                    }
-                    if ($StatusCode -eq '200') {
-                        break;
-                    }
-                    else {
-                        $i++
-                        Start-Sleep 30
-                    }
-                }
-                if (!($StatusCode -eq '200')) {
-                    throw $url+' is not available, status code is '+$StatusCode
-                    }
-                $output = $StatusCode
-                Write-Output $output
-                $DeploymentScriptOutputs = @{}
-                $DeploymentScriptOutputs['text'] = $output
-                ", // or "primaryScriptUri": "https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/deployment-script/deploymentscript-helloworld.ps1",
+                "primaryScriptUri": "[variables('primaryScriptUri')]",
                 "supportingScriptUris":[],
                 "timeout": "PT30M",
                 "cleanupPreference": "OnSuccess",
