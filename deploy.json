@@ -33,6 +33,9 @@
                         "type": "Microsoft.Resources/deployments",
                         "apiVersion": "2018-05-01",
                         "name": "salinkedTemplate",
+                        "dependsOn": [
+                            "appLinkedTemplate"
+                            ],
                         "properties": {
                             "mode": "Incremental",
                             "templateLink": {

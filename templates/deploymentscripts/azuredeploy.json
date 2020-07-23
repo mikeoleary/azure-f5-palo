@@ -55,7 +55,7 @@
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2019-10-01-preview",
-            "name": "runPowerShellInline",
+            "name": "runPowerShellInline-checkAppServerStatus",
             "dependsOn": [
                 "[guid(resourceGroup().id)]"
             ],
