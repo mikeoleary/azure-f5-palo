@@ -178,11 +178,12 @@
         },
         "bigIpVersion": {
             "allowedValues": [
+                "15.1.004000",
                 "15.0.100000",
                 "14.1.200000",
                 "latest"
             ],
-            "defaultValue": "15.0.100000",
+            "defaultValue": "15.1.004000",
             "metadata": {
                 "description": "F5 BIG-IP version you want to use."
             },
