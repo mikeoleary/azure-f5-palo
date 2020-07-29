@@ -36,7 +36,7 @@
         }
     },
     "variables": {
-        "storageAccountName": "[concat(parameters('StorageAccountName'),take(uniqueString(resourceGroup().id),5))]",
+        "storageAccountName": "[concat(take(toLower(parameters('StorageAccountName')), 19),take(uniqueString(resourceGroup().id),5))]",
         "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]",
         "sourceStorageURL": "[parameters('sourceStorageURL')]",
         "lbpublicIPName": "loadBalancerPublicIP",

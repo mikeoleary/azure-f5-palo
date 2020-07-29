@@ -16,7 +16,7 @@
         },
         "dnsLabel": {
             "metadata": {
-                "description": "Unique DNS Name for the Public IP address used to access the Virtual Machine."
+                "description": "Must be globally unique DNS Name. This value is used to name resources like VMs and storage accounts. Must be letters and numbers only."
             },
             "type": "string"
         },
@@ -24,6 +24,7 @@
             "metadata": {
                 "description": "This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation. You should use your own IP address. By using * you will leave this management console open to the Internet, which is not recommended."
             },
+            "defaultValue": "*",
             "type": "string"
         }
     },
