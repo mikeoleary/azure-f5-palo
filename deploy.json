@@ -106,10 +106,10 @@
                                     "value": "[parameters('adminUserName')]"
                                 },
                                 "dnsNameForPublicIP": {
-                                    "value": "[concat(parameters('dnsLabel'),'-palo1')]"
+                                    "value": "[concat(take(toLower(parameters('dnsLabel')), 19), '-palo1')]"
                                 },
                                 "dnsNameForPublicIP2": {
-                                    "value": "[concat(parameters('dnsLabel'),'-palo2')]"
+                                    "value": "[concat(take(toLower(parameters('dnsLabel')), 19), '-palo2')]"
                                 },
                                 "vmName": {
                                     "value": "pavm1"
