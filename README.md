@@ -37,6 +37,7 @@ This set of templates will automatically configure HA via Azure Load Balancers.
 ## Notes
 * Do not use special/uppercase characters for your resource group name using the "deploy to Azure" button. Only lowercase and numbers.
 * Restricted source address should be in the IP/CIDR Mask format.
+* The Palo Alto VMs deployed requires a default Azure subscription to increase quotas for "Regional Cores" from 10 to at least 18.
 * This set of templates will deploy F5 BIG-IP and PaloAlto VM-Series images from marketplace images. This means you will be charged on a PAYG basis.
 * To build templates for PaloAlto VMs, I have started with a sample from PaloAlto's examples [here](https://github.com/PaloAltoNetworks/azure/tree/master/vmseries-avset) and made some modifications to deploy 2 VMs with external and internal load balancers, as well as bootstrap the devices.
 * To build templates for F5 VM's, I have started with the supported F5 template [here](https://github.com/F5Networks/f5-azure-arm-templates/tree/master/supported/failover/same-net/via-lb/3nic/new-stack/payg) but made some modifications to this template in order to build out a full demo environment. 
