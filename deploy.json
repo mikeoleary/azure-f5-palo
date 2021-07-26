@@ -33,6 +33,23 @@
                     {
                         "type": "Microsoft.Resources/deployments",
                         "apiVersion": "2018-05-01",
+                        "name": "vnetLinkedTemplate",
+                        "properties": {
+                            "mode": "Incremental",
+                            "templateLink": {
+                                "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/vnet/azuredeploy.json",
+                                "contentVersion":"1.0.0.0"
+                            },
+                            "parameters": {
+                                "dnsLabel": {
+                                    "value": "[parameters('dnsLabel')]"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "Microsoft.Resources/deployments",
+                        "apiVersion": "2018-05-01",
                         "name": "stgAcctLinkedTemplate",
                         "dependsOn": [
                             "appLinkedTemplate"
@@ -67,7 +84,7 @@
                             "mode": "Incremental",
                             "templateLink": {
                                 "uri":"https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/f5/azuredeploy.json",
-                                "contentVersion":"7.2.0.0"
+                                "contentVersion":"9.5.0.0"
                             },
                             "parameters": {
                                 "adminUsername": {
@@ -79,6 +96,21 @@
                                 "dnsLabel": {
                                     "value": "[parameters('dnsLabel')]"
                                 },
+                                "vnetName":{
+                                    "value": "[reference('vnetLinkedTemplate').outputs.virtualNetworkName.value]"
+                                },
+                                "vnetResourceGroupName":{
+                                    "value": "[resourceGroup().name]"
+                                },
+                                "mgmtSubnetName":{
+                                    "value": "[reference('vnetLinkedTemplate').outputs.mgmtSubnetName.value]"
+                                },
+                                "externalSubnetName":{
+                                    "value": "[reference('vnetLinkedTemplate').outputs.externalSubnetName.value]"
+                                },
+                                "internalSubnetName":{
+                                    "value": "[reference('vnetLinkedTemplate').outputs.internalSubnetName.value]"
+                                },                             
                                 "declarationUrl": {
                                     "value": "https://raw.githubusercontent.com/mikeoleary/azure-f5-palo/master/templates/f5/baseline.json"
                                 },
@@ -124,16 +156,16 @@
                                     "value": "bundle2"
                                 },
                                 "subnet0id" : {
-                                    "value": "[reference('f5LinkedTemplate').outputs.mgmtSubnetId.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.mgmtSubnetId.value]"
                                 },
                                 "subnet1id" : {
-                                    "value": "[reference('f5LinkedTemplate').outputs.untrustSubnetId.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.untrustSubnetId.value]"
                                 },
                                 "subnet2id" : {
-                                    "value": "[reference('f5LinkedTemplate').outputs.trustSubnetId.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.trustSubnetId.value]"
                                 },
                                 "subnet3id" : {
-                                    "value": "[reference('f5LinkedTemplate').outputs.haSubnetId.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.haSubnetId.value]"
                                 },
                                 "storageAccountName" : {
                                     "value": "[reference('stgAcctLinkedTemplate').outputs.storageAccountName.value]"
@@ -165,10 +197,10 @@
                                     "value": "[parameters('password')]"
                                 },
                                 "subnetId": {
-                                    "value": "[reference('f5LinkedTemplate').outputs.appSubnet1Id.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.appSubnet1Id.value]"
                                 },
                                 "privateIPAddress": {
-                                    "value": "[reference('f5LinkedTemplate').outputs.appServer1IP.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.appServer1IP.value]"
                                 }
                             }
                         }
@@ -238,28 +270,22 @@
                             },
                             "parameters": {
                                 "virtualnetworkName": {
-                                    "value": "[reference('f5LinkedTemplate').outputs.virtualnetworkName.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.virtualnetworkName.value]"
                                 },
                                 "extSubnetName": {
-                                    "value": "[reference('f5LinkedTemplate').outputs.extSubnetName.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.extSubnetName.value]"
                                 },
                                 "extSubnetPrefix": {
-                                    "value": "[reference('f5LinkedTemplate').outputs.extSubnetPrefix.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.extSubnetPrefix.value]"
                                 },
                                 "extNsgId": {
-                                    "value": "[reference('f5LinkedTemplate').outputs.extNsgId.value]"
-                                },
-                                "routeTableExternalId": {
-                                    "value": "[reference('f5LinkedTemplate').outputs.routeTableExternalId.value]"
+                                    "value": "[resourceId('Microsoft.Network/networkSecurityGroups/',concat(parameters('dnsLabel'),'-ext-nsg'))]"
                                 },
                                 "appSubnet1Name": {
-                                    "value": "[reference('f5LinkedTemplate').outputs.appSubnet1Name.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.appSubnet1Name.value]"
                                 },
                                 "appSubnet1Prefix": {
-                                    "value": "[reference('f5LinkedTemplate').outputs.appSubnet1Prefix.value]"
-                                },
-                                "routeTableAppSubnet1Id": {
-                                    "value": "[reference('f5LinkedTemplate').outputs.routeTableAppSubnet1Id.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.appSubnet1Prefix.value]"
                                 }
                             }
                         }

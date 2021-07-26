@@ -20,12 +20,6 @@
                 "description": "IP range of app 1 subnet"
             }
         },
-        "routeTableAppSubnet1Id": {
-            "type": "string",
-            "metadata": {
-                "description": "ID of app subnet 1 route table"
-            }
-        },
         "extSubnetName": {
             "type": "string",
             "metadata": {
@@ -43,18 +37,31 @@
             "metadata": {
                 "description": "ID of Network Security Group"
             }
-        },
-        "routeTableExternalId": {
-            "type": "string",
-            "metadata": {
-                "description": "ID of ext route table"
-            }
         }
     },
     "variables": {
-        "networkApiVersion": "2017-11-01"
+        "networkApiVersion": "2017-11-01",
+        "location": "[resourceGroup().location]"
     },
     "resources": [
+        {
+            "name": "routeTableExternal",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "[variables('networkApiVersion')]",
+            "location": "[variables('location')]",
+                "properties": {
+                    "routes": [
+                    {
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.0.2.50"
+                        },
+                        "name": "defaultRoute"
+                    }
+                    ]
+                }
+        },
         {
             "name": "[concat(parameters('virtualNetworkName'), '/', parameters('extSubnetName'))]",
             "type": "Microsoft.Network/virtualNetworks/subnets",
@@ -65,11 +72,30 @@
                     "id": "[parameters('extNsgId')]"
                 },
                 "routeTable": {
-                    "id": "[parameters('routeTableExternalId')]"
+                    "id": "[resourceId('Microsoft.Network/routeTables','routeTableExternal')]"
+
                 }
             }
         },
-                {
+        {
+            "name": "routeTableAppSubnet1",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "[variables('networkApiVersion')]",
+            "location": "[variables('location')]",
+                "properties": {
+                    "routes": [
+                    {
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.0.4.50"
+                        },
+                        "name": "defaultRoute"
+                    }
+                    ]
+                }
+        },
+        {
             "name": "[concat(parameters('virtualNetworkName'), '/', parameters('appSubnet1Name'))]",
             "type": "Microsoft.Network/virtualNetworks/subnets",
             "dependsOn": [
@@ -79,7 +105,7 @@
             "properties": {
                 "addressPrefix": "[parameters('appSubnet1Prefix')]",
                 "routeTable": {
-                    "id": "[parameters('routeTableAppSubnet1Id')]"
+                    "id": "[resourceId('Microsoft.Network/routeTables','routeTableAppSubnet1')]"
                 }
             }
         }

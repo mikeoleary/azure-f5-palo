@@ -1,0 +1,187 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetAddressPrefix": {
+            "defaultValue": "10.0",
+            "metadata": {
+                "description": "The start of the CIDR block the BIG-IP VEs use when creating the Vnet and subnets.  You MUST type just the first two octets of the /16 virtual network that will be created, for example '10.0', '10.100', 192.168'."
+            },
+            "type": "string"
+        },
+        "dnsLabel": {
+            "metadata": {
+                "description": "Unique DNS Name for the Public IP address used to access the Virtual Machine."
+            },
+            "type": "string"
+        }
+    },
+    "variables": {
+        "networkApiVersion": "2018-04-01",
+        "location": "[resourceGroup().location]",
+        "dnsLabel": "[toLower(parameters('dnsLabel'))]",
+        "virtualNetworkName": "[concat(variables('dnsLabel'), '-vnet')]",
+        "vnetAddressPrefix": "[concat(parameters('vnetAddressPrefix'),'.0.0/16')]",
+        "mgmtSubnetName": "mgmt",
+        "mgmtSubnetPrefix": "[concat(parameters('vnetAddressPrefix'), '.0.0/24')]",
+        "mgmtSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('mgmtSubnetName'))]",
+        "extSubnetName": "external",
+        "extSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('extsubnetName'))]",
+        "extSubnetPrefix": "[concat(parameters('vnetAddressPrefix'), '.3.0/24')]",
+        "intSubnetName": "internal",
+        "intSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('intsubnetName'))]",
+        "intSubnetPrefix": "[concat(parameters('vnetAddressPrefix'), '.4.0/24')]",
+        "untrustSubnetName": "untrust",
+        "untrustSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('untrustsubnetName'))]",
+        "trustSubnetName": "trust",
+        "trustSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('trustsubnetName'))]",
+        "appSubnet1Name": "appSubnet1",
+        "appSubnet1Prefix": "[concat(parameters('vnetAddressPrefix'), '.5.0/24')]",
+        "appServer1IP": "[concat(parameters('vnetAddressPrefix'), '.5.100')]",
+        "appSubnet1Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet1Name'))]",
+        "appSubnet2Name": "appSubnet2",
+        "appSubnet2Prefix": "[concat(parameters('vnetAddressPrefix'), '.6.0/24')]",
+        "appSubnet2Id": "[concat(variables('vnetId'), '/subnets/', variables('appSubnet2Name'))]",
+        "haSubnetName":"haSubnet",
+        "haSubnetId": "[concat(variables('vnetId'), '/subnets/', variables('haSubnetName'))]",
+        "haSubnetPrefix":"[concat(parameters('vnetAddressPrefix'), '.7.0/24')]",
+        "untrustSubnetPrefix": "[concat(parameters('vnetAddressPrefix'), '.1.0/24')]",
+        "trustSubnetPrefix": "[concat(parameters('vnetAddressPrefix'), '.2.0/24')]",
+        "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
+    },
+    "resources": [
+        {
+            "apiVersion": "[variables('networkApiVersion')]",
+            "location": "[variables('location')]",
+            "name": "[variables('virtualNetworkName')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnetAddressPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('mgmtSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('mgmtSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('extSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('extSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('intSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('intSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('untrustSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('untrustSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('trustSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('trustSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('appSubnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('appSubnet1Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('appSubnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('appSubnet2Prefix')]",
+                            "delegations": [
+                                {
+                                "name": "DelegationService",
+                                "properties": {
+                                    "serviceName": "Microsoft.ContainerInstance/containerGroups"
+                                }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "[variables('haSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('haSubnetPrefix')]"
+                        }
+                    }
+                ]
+            },
+            "type": "Microsoft.Network/virtualNetworks"
+        }
+    ],
+    "outputs": {
+        "virtualNetworkAddressPrefix": {
+            "type": "string",
+            "value": "[reference(variables('virtualNetworkName')).AddressSpace.AddressPrefixes[0]]"
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "value": "[variables('virtualNetworkName')]"
+        },
+        "mgmtSubnetId": {
+            "type": "string",
+            "value": "[variables('mgmtSubnetId')]"
+        },
+        "untrustSubnetId": {
+            "type": "string",
+            "value": "[variables('untrustSubnetId')]"
+        },
+        "trustSubnetId": {
+            "type": "string",
+            "value": "[variables('trustSubnetId')]"
+        },
+        "externalSubnetId": {
+            "type": "string",
+            "value": "[variables('extSubnetId')]"
+        },
+        "internalSubnetId": {
+            "type": "string",
+            "value": "[variables('intSubnetId')]"
+        },
+        "appSubnet1Id": {
+            "type": "string",
+            "value": "[variables('appSubnet1Id')]"
+        },
+        "appSubnet1Name": {
+            "type": "string",
+            "value": "[variables('appSubnet1Name')]"
+        },
+        "appSubnet1Prefix": {
+            "type": "string",
+            "value": "[variables('appSubnet1Prefix')]"
+        },
+        "appServer1IP":{
+            "type": "string",
+            "value": "[variables('appServer1IP')]"
+        },
+        "appSubnet2Id": {
+            "type": "string",
+            "value": "[variables('appSubnet2Id')]"
+        },
+        "haSubnetId": {
+            "type": "string",
+            "value": "[variables('haSubnetId')]"
+        },
+        "extSubnetName": {
+            "type": "string",
+            "value": "[variables('extSubnetName')]"
+        },
+        "extSubnetPrefix":{
+            "type": "string",
+            "value": "[variables('extSubnetPrefix')]"
+        }
+    }
+}
