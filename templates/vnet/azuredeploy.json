@@ -135,6 +135,10 @@
             "type": "string",
             "value": "[variables('mgmtSubnetId')]"
         },
+        "mgmtSubnetName": {
+            "type": "string",
+            "value": "[variables('mgmtSubnetName')]"
+        },
         "untrustSubnetId": {
             "type": "string",
             "value": "[variables('untrustSubnetId')]"
@@ -147,9 +151,21 @@
             "type": "string",
             "value": "[variables('extSubnetId')]"
         },
+        "externalSubnetName": {
+            "type": "string",
+            "value": "[variables('extSubnetName')]"
+        },
+        "extSubnetPrefix":{
+            "type": "string",
+            "value": "[variables('extSubnetPrefix')]"
+        },
         "internalSubnetId": {
             "type": "string",
             "value": "[variables('intSubnetId')]"
+        },
+        "internalSubnetName": {
+            "type": "string",
+            "value": "[variables('intSubnetName')]"
         },
         "appSubnet1Id": {
             "type": "string",
@@ -174,14 +190,6 @@
         "haSubnetId": {
             "type": "string",
             "value": "[variables('haSubnetId')]"
-        },
-        "extSubnetName": {
-            "type": "string",
-            "value": "[variables('extSubnetName')]"
-        },
-        "extSubnetPrefix":{
-            "type": "string",
-            "value": "[variables('extSubnetPrefix')]"
         }
     }
 }
