@@ -273,7 +273,7 @@
                                     "value": "[reference('vnetLinkedTemplate').outputs.virtualnetworkName.value]"
                                 },
                                 "extSubnetName": {
-                                    "value": "[reference('vnetLinkedTemplate').outputs.extSubnetName.value]"
+                                    "value": "[reference('vnetLinkedTemplate').outputs.externalSubnetName.value]"
                                 },
                                 "extSubnetPrefix": {
                                     "value": "[reference('vnetLinkedTemplate').outputs.extSubnetPrefix.value]"
