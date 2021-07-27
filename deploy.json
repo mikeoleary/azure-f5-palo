@@ -3,6 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "adminUserName": {
+            "defaultValue": "azureuser",
+            "allowedValues": [
+                "azureuser"
+            ],
             "metadata": {
                 "description": "User Name for network devices"
             },
@@ -25,6 +29,9 @@
                 "description": "This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation. You should use your own IP address. By using * you will leave this management console open to the Internet, which is not recommended."
             },
             "defaultValue": "*",
+            "allowedValues": [
+                "*"
+            ],
             "type": "string"
         }
     },
