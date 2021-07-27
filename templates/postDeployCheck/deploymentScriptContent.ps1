@@ -28,5 +28,5 @@ if (!($StatusCode -eq '200')) {
     }
 $output = $StatusCode
 Write-Output $output
-$DeploymentScriptOutputs = @{}
-$DeploymentScriptOutputs['text'] = $output
+#$DeploymentScriptOutputs = @{}
+#$DeploymentScriptOutputs['text'] = $output
