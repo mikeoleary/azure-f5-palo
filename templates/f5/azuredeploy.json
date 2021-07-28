@@ -482,8 +482,8 @@
         "intSubnetPrivateAddress1": "[concat(variables('intSubnetPrivateAddressPrefix'), variables('intSubnetPrivateAddressSuffix'))]",
         "intSubnetPrivateAddress2": "[concat(variables('intSubnetPrivateAddressPrefix'), variables('intSubnetPrivateAddressSuffix1'))]",
         "intSubnetPrivateAddress3": "[concat(variables('intSubnetPrivateAddressPrefix'), variables('intSubnetPrivateAddressSuffix2'))]",
-        "internalLoadBalancerAddress": "[concat(variables('intSubnetPrivateAddressPrefix'), variables('intSubnetPrivateAddressSuffix3'))]",
-        "internalLoadBalancerAddress1": "[concat(variables('extSubnetPrivateAddressPrefix'), variables('extSubnetPrivateAddressSuffix2'))]",
+        "internalLoadBalancerAddress": "[concat(variables('extSubnetPrivateAddressPrefix'), variables('extSubnetPrivateAddressSuffix2'))]",
+        "internalLoadBalancerAddress1": "[concat(variables('intSubnetPrivateAddressPrefix'), variables('intSubnetPrivateAddressSuffix3'))]",
         "availabilitySetName": "[concat(variables('dnsLabel'), '-avset')]",
         "zoneMappings": "[replace(toLower(string(providers('Microsoft.Compute', 'virtualMachines').zoneMappings)), ' ', '')]",
         "southcentralus": "[equals(variables('location'), string('southcentralus'))]",
@@ -513,7 +513,7 @@
         "intSubnetPrivateAddressSuffix": "[add(variables('intSubnetPrivateAddressSuffixInt'), 1)]",
         "intSubnetPrivateAddressSuffix1": "[add(variables('intSubnetPrivateAddressSuffixInt'), 2)]",
         "intSubnetPrivateAddressSuffix2": "[add(variables('intSubnetPrivateAddressSuffixInt'), 3)]",
-        "intSubnetPrivateAddressSuffix3": "[add(variables('intSubnetPrivateAddressSuffixInt'), 5)]",
+        "intSubnetPrivateAddressSuffix3": "[add(variables('intSubnetPrivateAddressSuffixInt'), 4)]",
         "numberOfExternalIps": "[parameters('numberOfExternalIps')]",
         "backEndAddressPoolArray": [
             {
@@ -1046,7 +1046,7 @@
                     {
                         "name": "LoadBalancerFrontEnd",
                         "properties": {
-                            "privateIPAddress": "[variables('internalLoadBalancerAddress')]",
+                            "privateIPAddress": "10.0.3.5",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
                                 "id": "[variables('extSubnetId')]"
@@ -1056,7 +1056,7 @@
                     {
                         "name": "LoadBalancerFrontEnd1",
                         "properties": {
-                            "privateIPAddress": "[variables('internalLoadBalancerAddress1')]",
+                            "privateIPAddress": "10.0.4.5",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
                                 "id": "[variables('intSubnetId')]"
