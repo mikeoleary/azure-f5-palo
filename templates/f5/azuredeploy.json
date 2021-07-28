@@ -1046,7 +1046,7 @@
                     {
                         "name": "LoadBalancerFrontEnd",
                         "properties": {
-                            "privateIPAddress": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), json('null'), variables('internalLoadBalancerAddress'))]",
+                            "privateIPAddress": "[variables('internalLoadBalancerAddress')]",
                             "privateIPAllocationMethod": "Static",
                             "subnet": {
                                 "id": "[variables('extSubnetId')]"
@@ -1056,8 +1056,8 @@
                     {
                         "name": "LoadBalancerFrontEnd1",
                         "properties": {
-                            "privateIPAddress": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), json('null'), variables('internalLoadBalancerAddress1'))]",
-                            "privateIPAllocationMethod": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), 'Dynamic', 'Static')]",
+                            "privateIPAddress": "[variables('internalLoadBalancerAddress1')]",
+                            "privateIPAllocationMethod": "Static",
                             "subnet": {
                                 "id": "[variables('intSubnetId')]"
                             }
