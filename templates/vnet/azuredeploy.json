@@ -120,6 +120,42 @@
                 ]
             },
             "type": "Microsoft.Network/virtualNetworks"
+        },
+        {
+            "name": "routeTableExternal",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "[variables('networkApiVersion')]",
+            "location": "[variables('location')]",
+                "properties": {
+                    "routes": [
+                    {
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.0.2.50"
+                        },
+                        "name": "defaultRoute"
+                    }
+                    ]
+                }
+        },
+                {
+            "name": "routeTableAppSubnet1",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "[variables('networkApiVersion')]",
+            "location": "[variables('location')]",
+                "properties": {
+                    "routes": [
+                    {
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.0.4.50"
+                        },
+                        "name": "defaultRoute"
+                    }
+                    ]
+                }
         }
     ],
     "outputs": {
