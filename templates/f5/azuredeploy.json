@@ -483,6 +483,7 @@
         "intSubnetPrivateAddress2": "[concat(variables('intSubnetPrivateAddressPrefix'), variables('intSubnetPrivateAddressSuffix1'))]",
         "intSubnetPrivateAddress3": "[concat(variables('intSubnetPrivateAddressPrefix'), variables('intSubnetPrivateAddressSuffix2'))]",
         "internalLoadBalancerAddress": "[concat(variables('intSubnetPrivateAddressPrefix'), variables('intSubnetPrivateAddressSuffix3'))]",
+        "internalLoadBalancerAddress1": "[concat(variables('extSubnetPrivateAddressPrefix'), variables('extSubnetPrivateAddressSuffix2'))]",
         "availabilitySetName": "[concat(variables('dnsLabel'), '-avset')]",
         "zoneMappings": "[replace(toLower(string(providers('Microsoft.Compute', 'virtualMachines').zoneMappings)), ' ', '')]",
         "southcentralus": "[equals(variables('location'), string('southcentralus'))]",
@@ -505,41 +506,26 @@
         "extSubnetSelfPrivateAddressPrefix": "[concat(variables('extSubnetSelfPrivateAddressPrefixArray')[0], '.', variables('extSubnetSelfPrivateAddressPrefixArray')[1], '.', variables('extSubnetSelfPrivateAddressPrefixArray')[2], '.')]",
         "extSubnetSelfPrivateAddressSuffixInt": "[int(variables('extSubnetSelfPrivateAddressPrefixArray')[3])]",
         "extSubnetSelfPrivateAddressSuffix": "[add(variables('extSubnetSelfPrivateAddressSuffixInt'), 1)]",
+        "extSubnetPrivateAddressSuffix2": "[add(variables('extSubnetPrivateAddressSuffixInt'), 5)]",
         "intSubnetPrivateAddressPrefixArray": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), createArray('0','0','0','0'), split(parameters('internalIpAddressRangeStart'), '.'))]",
         "intSubnetPrivateAddressPrefix": "[concat(variables('intSubnetPrivateAddressPrefixArray')[0], '.', variables('intSubnetPrivateAddressPrefixArray')[1], '.', variables('intSubnetPrivateAddressPrefixArray')[2], '.')]",
         "intSubnetPrivateAddressSuffixInt": "[int(variables('intSubnetPrivateAddressPrefixArray')[3])]",
         "intSubnetPrivateAddressSuffix": "[add(variables('intSubnetPrivateAddressSuffixInt'), 1)]",
         "intSubnetPrivateAddressSuffix1": "[add(variables('intSubnetPrivateAddressSuffixInt'), 2)]",
         "intSubnetPrivateAddressSuffix2": "[add(variables('intSubnetPrivateAddressSuffixInt'), 3)]",
-        "intSubnetPrivateAddressSuffix3": "[add(variables('intSubnetPrivateAddressSuffixInt'), 4)]",
+        "intSubnetPrivateAddressSuffix3": "[add(variables('intSubnetPrivateAddressSuffixInt'), 5)]",
         "numberOfExternalIps": "[parameters('numberOfExternalIps')]",
         "backEndAddressPoolArray": [
             {
-                "id": "[concat(variables('extLbId'), '/backendAddressPools/', 'loadBalancerBackEnd')]"
+                "id": "[concat(variables('intLbId'), '/backendAddressPools/', 'loadBalancerBackEnd')]"
             },
             {
-                "id": "[concat(variables('intLbId'), '/backendAddressPools/', 'loadBalancerBackEnd')]"
+                "id": "[concat(variables('intLbId'), '/backendAddressPools/', 'loadBalancerBackEnd1')]"
             }
         ],
         "backEndMgmtAddressPoolArray": [
             {
-                "id": "[concat(variables('extLbId'), '/backendAddressPools/', 'loadBalancerMgmtBackEnd')]"
-            }
-        ],
-        "outboundRuleConfigArray": [
-            {
-                "properties": {
-                    "frontendIPConfigurations": [
-                        {
-                            "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('externalLoadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd1')]"
-                        }
-                    ],
-                    "backendAddressPool": {
-                        "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('externalLoadBalancerName')), '/backendAddressPools/loadBalancerMgmtBackEnd')]"
-                    },
-                    "protocol": "All"
-                },
-                "name": "outboundRuleForInit"
+                "id": "[concat(variables('intLbId'), '/backendAddressPools/', 'loadBalancerMgmtBackEnd')]"
             }
         ],
         "paygImageMap": {
@@ -632,8 +618,6 @@
                 "sku": "f5-big-ip-per-app-ve-ltm-25m-hourly"
             }
         },
-        "externalLoadBalancerName": "[concat(variables('dnsLabel'),'-ext-alb')]",
-        "extLbId": "[resourceId('Microsoft.Network/loadBalancers',variables('externalLoadBalancerName'))]",
         "publicIPAddressType": "Static",
         "mgmtPublicIPAddressName": "[concat(variables('dnsLabel'), '-mgmt-pip')]",
         "mgmtPublicIPAddressId": "[resourceId('Microsoft.Network/publicIPAddresses', variables('mgmtPublicIPAddressName'))]",
@@ -765,7 +749,6 @@
             "apiVersion": "[variables('networkApiVersion')]",
             "dependsOn": [
                 "[variables('mgmtNsgID')]",
-                "[concat('Microsoft.Network/loadBalancers/', variables('externalLoadBalancerName'))]",
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('mgmtPublicIPAddressName'), '0')]"
             ],
             "location": "[variables('location')]",
@@ -796,7 +779,6 @@
             "apiVersion": "[variables('networkApiVersion')]",
             "dependsOn": [
                 "[variables('mgmtNsgID')]",
-                "[concat('Microsoft.Network/loadBalancers/', variables('externalLoadBalancerName'))]",
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('mgmtPublicIPAddressName'), '1')]"
             ],
             "location": "[variables('location')]",
@@ -826,8 +808,8 @@
         {
             "apiVersion": "[variables('networkApiVersion')]",
             "dependsOn": [
-                "[variables('extLbId')]",
                 "extpipcopy",
+                "[variables('intLbId')]",
                 "[variables('extNsgID')]",
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('extSelfPublicIpAddressNamePrefix'), '0')]"
             ],
@@ -850,7 +832,7 @@
                     {
                         "name": "[concat(variables('resourceGroupName'), '-ext-ipconfig0')]",
                         "properties": {
-                            "loadBalancerBackendAddressPools": "[if(equals(parameters('provisionPublicIPApp'), 'No'), take(variables('backEndAddressPoolArray'), 0), take(variables('backEndAddressPoolArray'), 1))]",
+                            "loadBalancerBackendAddressPools": "[take(variables('backEndAddressPoolArray'), 0)]",
                             "primary": false,
                             "privateIPAddress": "[if(equals(parameters('externalIpSelfAddressRangeStart'), 'DYNAMIC'), json('null'), concat(variables('extSubnetPrivateAddressPrefix'), variables('extSubnetPrivateAddressSuffix0')))]",
                             "privateIPAllocationMethod": "[if(equals(parameters('externalIpSelfAddressRangeStart'), 'DYNAMIC'), 'Dynamic', 'Static')]",
@@ -870,8 +852,8 @@
         {
             "apiVersion": "[variables('networkApiVersion')]",
             "dependsOn": [
-                "[variables('extLbId')]",
                 "extpipcopy",
+                "[variables('intLbId')]",
                 "[variables('extNsgID')]",
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('extSelfPublicIpAddressNamePrefix'), '1')]"
             ],
@@ -894,7 +876,7 @@
                     {
                         "name": "[concat(variables('resourceGroupName'), '-ext-ipconfig1')]",
                         "properties": {
-                            "loadBalancerBackendAddressPools": "[if(equals(parameters('provisionPublicIPApp'), 'No'), take(variables('backEndAddressPoolArray'), 0), take(variables('backEndAddressPoolArray'), 1))]",
+                            "loadBalancerBackendAddressPools": "[take(variables('backEndAddressPoolArray'), 0)]",
                             "primary": false,
                             "privateIPAddress": "[if(equals(parameters('externalIpSelfAddressRangeStart'), 'DYNAMIC'), json('null'), concat(variables('extSubnetPrivateAddressPrefix'), variables('extSubnetPrivateAddressSuffix1')))]",
                             "privateIPAllocationMethod": "[if(equals(parameters('externalIpSelfAddressRangeStart'), 'DYNAMIC'), 'Dynamic', 'Static')]",
@@ -939,7 +921,7 @@
                     {
                         "name": "[concat(variables('dnsLabel'), '-int-ipconfig-secondary')]",
                         "properties": {
-                            "loadBalancerBackendAddressPools": "[take(variables('backEndAddressPoolArray'), 0)]",
+                            "loadBalancerBackendAddressPools": "[take(variables('backEndAddressPoolArray'), 1)]",
                             "privateIPAddress": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), json('null'), variables('intSubnetPrivateAddress2'))]",
                             "privateIPAllocationMethod": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), 'Dynamic', 'Static')]",
                             "subnet": {
@@ -980,7 +962,7 @@
                     {
                         "name": "[concat(variables('dnsLabel'), '-int-ipconfig-secondary')]",
                         "properties": {
-                            "loadBalancerBackendAddressPools": "[take(variables('backEndAddressPoolArray'), 0)]",
+                            "loadBalancerBackendAddressPools": "[take(variables('backEndAddressPoolArray'), 1)]",
                             "privateIPAddress": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), json('null'), variables('intSubnetPrivateAddress3'))]",
                             "privateIPAllocationMethod": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), 'Dynamic', 'Static')]",
                             "subnet": {
@@ -1044,45 +1026,6 @@
         },
         {
             "apiVersion": "[variables('networkApiVersion')]",
-            "condition": "[equals(parameters('provisionPublicIPApp'),'Yes')]",
-            "dependsOn": [
-                "extpipcopy"
-            ],
-            "location": "[variables('location')]",
-            "name": "[variables('externalLoadBalancerName')]",
-            "properties": {
-                "outboundRules": "[if(equals(parameters('provisionPublicIP'),'Yes'), json('null'), variables('outboundRuleConfigArray'))]",
-                "backendAddressPools": [
-                    {
-                        "name": "loadBalancerBackEnd"
-                    },
-                    {
-                        "name": "loadBalancerMgmtBackEnd"
-                    }
-                ],
-                "copy": [
-                    {
-                        "count": "[variables('numberOfExternalIps')]",
-                        "input": {
-                            "name": "[concat('loadBalancerFrontEnd', copyIndex('frontendIPConfigurations', 1))]",
-                            "properties": {
-                                "publicIPAddress": {
-                                    "id": "[concat(variables('extPublicIPAddressIdPrefix'), sub(copyIndex('frontendIPConfigurations', 1), 1))]"
-                                }
-                            }
-                        },
-                        "name": "frontendIPConfigurations"
-                    }
-                ]
-            },
-            "tags": "[if(empty(variables('tagValues')), json('null'), variables('tagValues'))]",
-            "sku": {
-                "name": "Standard"
-            },
-            "type": "Microsoft.Network/loadBalancers"
-        },
-        {
-            "apiVersion": "[variables('networkApiVersion')]",
             "condition": "[equals(parameters('provisionInternalLoadBalancer'),'Yes')]",
             "dependsOn": [
                 "[variables('extNsgID')]",
@@ -1094,6 +1037,9 @@
                 "backendAddressPools": [
                     {
                         "name": "LoadBalancerBackEnd"
+                    },
+                    {
+                        "name": "LoadBalancerBackEnd1"
                     }
                 ],
                 "frontendIPConfigurations": [
@@ -1101,6 +1047,16 @@
                         "name": "LoadBalancerFrontEnd",
                         "properties": {
                             "privateIPAddress": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), json('null'), variables('internalLoadBalancerAddress'))]",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[variables('extSubnetId')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "LoadBalancerFrontEnd1",
+                        "properties": {
+                            "privateIPAddress": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), json('null'), variables('internalLoadBalancerAddress1'))]",
                             "privateIPAllocationMethod": "[if(equals(parameters('internalIpAddressRangeStart'), 'DYNAMIC'), 'Dynamic', 'Static')]",
                             "subnet": {
                                 "id": "[variables('intSubnetId')]"
@@ -1113,12 +1069,12 @@
                         "name": "allProtocolLbRule",
                         "properties": {
                             "backendAddressPool": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/backendAddressPools/loadBalancerBackEnd')]"
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/backendAddressPools/loadBalancerBackEnd1')]"
                             },
                             "backendPort": 0,
                             "enableFloatingIP": false,
                             "frontendIPConfiguration": {
-                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd')]"
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd1')]"
                             },
                             "frontendPort": 0,
                             "idleTimeoutInMinutes": 15,
@@ -1127,6 +1083,46 @@
                                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/probes/tcp-probe-', parameters('internalLoadBalancerProbePort'))]"
                             },
                             "protocol": "All"
+                        }
+                    },
+                    {
+                        "name": "lbRule-80",
+                        "properties": {
+                            "backendAddressPool": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/backendAddressPools/loadBalancerBackEnd')]"
+                            },
+                            "backendPort": 80,
+                            "enableFloatingIP": false,
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd')]"
+                            },
+                            "frontendPort": 80,
+                            "idleTimeoutInMinutes": 15,
+                            "loadDistribution": "Default",
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/probes/tcp-probe-80')]"
+                            },
+                            "protocol": "Tcp"
+                        }
+                    },
+                    {
+                        "name": "lbRule-443",
+                        "properties": {
+                            "backendAddressPool": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/backendAddressPools/loadBalancerBackEnd')]"
+                            },
+                            "backendPort": 443,
+                            "enableFloatingIP": false,
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/frontendIpConfigurations/loadBalancerFrontEnd')]"
+                            },
+                            "frontendPort": 443,
+                            "idleTimeoutInMinutes": 15,
+                            "loadDistribution": "Default",
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('internalLoadBalancerName')), '/probes/tcp-probe-443')]"
+                            },
+                            "protocol": "Tcp"
                         }
                     }
                 ],
@@ -1137,6 +1133,24 @@
                             "intervalInSeconds": 5,
                             "numberOfProbes": 2,
                             "port": "[parameters('internalLoadBalancerProbePort')]",
+                            "protocol": "Tcp"
+                        }
+                    },
+                    {
+                        "name": "tcp-probe-80",
+                        "properties": {
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2,
+                            "port": "80",
+                            "protocol": "Tcp"
+                        }
+                    },
+                    {
+                        "name": "tcp-probe-443",
+                        "properties": {
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2,
+                            "port": "443",
                             "protocol": "Tcp"
                         }
                     }
